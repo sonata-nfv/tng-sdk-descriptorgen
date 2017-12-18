@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+<html>
+<title>5GTANGO descriptor generator</title>
+<body>
+
+	<h1>5GTANGO descriptor generator</h1>
+	<form id="frm1">
+		<p>Please provide the following information or use the defaults</p>
+		Author name: <input type="text" id="author" value="Tango" required><br>
+		Vendor name: <input type="text" id="vendor" value="Tango" required><br>
+		Service name: <input type="text" id="name" value="tango-nsd" required><br>
+		Service description: <input type="text" id="description" value="A default NSD with two default VNFDs" required><br>
+		Number of VNFs:	<select id="vnfs">
+							<option value="1">1</option>
+							<option selected value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+						</select><br>
+		VNF type: 	<select id="vnfType">
+						<option value="ubuntu">ubuntu</option>
+					</select><br>
+		<br>
+		<input type="button" onclick="loadDescriptors()" value="Submit">
+	</form>
+	<p id="info"></p>
+	<h2 id="nsd"></h2>
+	
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="https://cdn.rawgit.com/nodeca/js-yaml/bee7e998/dist/js-yaml.min.js"></script>
+	
+	<script src="generate.js"></script>
+</body>
+</html> 
