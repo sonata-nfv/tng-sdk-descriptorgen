@@ -27,8 +27,8 @@ var defaultNsd;
 
 // load default VNFD and NSD from GitHub (asynchronous -> set VNFD, NSD and ask for user input when ready)
 function loadDescriptors() {
-	var vnfdUrl = "https://cdn.rawgit.com/StefanUPB/tgn-descriptor-generator/24a841db/default-vnfd.yml";
-	var nsdUrl = "https://cdn.rawgit.com/StefanUPB/tgn-descriptor-generator/24a841db/default-nsd.yml";
+	var vnfdUrl = "https://cdn.rawgit.com/sonata-nfv/tgn-descriptor-generator/c93807fc/default-vnfd.yml";
+	var nsdUrl = "https://cdn.rawgit.com/sonata-nfv/tgn-descriptor-generator/c93807fc/default-nsd.yml";
 	
 	$.get(vnfdUrl, setVnfd);
 	$.get(nsdUrl, setNsd);
