@@ -27,8 +27,8 @@ var defaultNsd;
 
 // load default VNFD and NSD from GitHub (asynchronous -> set VNFD, NSD and ask for user input when ready)
 function loadDescriptors() {
-	var vnfdUrl = "https://raw.githubusercontent.com/StefanUPB/tango-schema/master/tools/generate/default-vnfd.yml";
-	var nsdUrl = "https://raw.githubusercontent.com/StefanUPB/tango-schema/master/tools/generate/default-nsd.yml";
+	var vnfdUrl = "https://cdn.rawgit.com/StefanUPB/tgn-descriptor-generator/24a841db/default-vnfd.yml";
+	var nsdUrl = "https://cdn.rawgit.com/StefanUPB/tgn-descriptor-generator/24a841db/default-nsd.yml";
 	
 	$.get(vnfdUrl, setVnfd);
 	$.get(nsdUrl, setNsd);
