@@ -53,7 +53,7 @@ function editDescriptors() {
 	var vnfds = [];
 	defaultVnfd.author = document.getElementById('author').value;
 	defaultVnfd.vendor = document.getElementById('vendor').value;
-	var numVnfs = document.getElementById('vnfs').value;
+	var numVnfs = Number(document.getElementById('vnfs').value);
 	for (i=0; i<numVnfs; i++) {
 		vnfds[i] = Object.assign({}, defaultVnfd);		// shallow copy defaultVnfd (enough since VNFDs aren't nested)
 		vnfds[i].name = "ubuntu-vnf" + i;
