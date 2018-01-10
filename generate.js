@@ -24,6 +24,9 @@ partner consortium (www.5gtango.eu). */
 var defaultVnfd;
 var defaultNsd;
 
+// button click
+$('#submitBtn').on('click', loadDescriptors);
+
 
 // load default VNFD and NSD from GitHub (asynchronous -> set VNFD, NSD and ask for user input when ready)
 function loadDescriptors() {
