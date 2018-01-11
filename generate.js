@@ -118,10 +118,10 @@ function editDescriptors() {
 
 
 // show the edited descriptors for further editing and copying
-function showDescriptors(nsd, vnfds) {
+function showDescriptors(nsd, vnfds) {	
 	// remove form (refresh to change form input)
-	var frm1 = document.getElementById('frm1');
-	frm1.parentNode.removeChild(frm1);
+	//var frm1 = document.getElementById('frm1');
+	//frm1.parentNode.removeChild(frm1);
 	
 	// print instructions
 	document.getElementById('info').innerHTML = "Please edit, copy, and paste the generated descriptors below as needed.";

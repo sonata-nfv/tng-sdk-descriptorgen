@@ -11,5 +11,6 @@ The current version is just a simple prototype to test the main functionality. B
 
 **TODO: Comments after F2F**
 
-* change name from tgn to tng
 * support specifying high-level information in some kind of meta-descriptor that can be compiled into descriptors via command line --> more comfortable for advanced users who don't want to use the web interface
+* specify min/max number of VNFCs per VDU
+* allow to specify multiple VDUs per VNF?
