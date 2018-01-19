@@ -129,25 +129,26 @@ function showDescriptors(nsd, vnfds) {
 	// print NSD
 	var nsdHeader = document.getElementById('nsd');
 	nsdHeader.innerHTML = "NSD";
-	var nsdCode = document.createElement('pre');
-	nsdCode.setAttribute("contentEditable", "true");
-	nsdCode.style.background = "#f3f3f3";
-	nsdCode.innerHTML = jsyaml.safeDump(nsd);
-	nsdHeader.parentNode.appendChild(nsdCode);
+	var nsdCode = document.getElementById('nsd-code');
+	var code = document.createElement('pre');
+	code.className = "prettyprint lang-yaml";
+	code.setAttribute("contentEditable", "true");
+	code.innerHTML = jsyaml.safeDump(nsd);
+	nsdCode.appendChild(code);
 	
 	// print VNFDs
-	var vnfdHeader = document.createElement('h2');
+	var vnfdHeader = document.getElementById('vnfds');
 	vnfdHeader.innerHTML = "VNFDs";
-	nsdHeader.parentNode.appendChild(vnfdHeader);
+	var vnfdCode = document.getElementById('vnfd-code');
 	for (i = 0; i < vnfds.length; i++) {
 		var vnfdSubheader = document.createElement('h3');
 		vnfdSubheader.innerHTML = "VNFD " + i;
-		vnfdHeader.parentNode.appendChild(vnfdSubheader);
-		var vnfdCode = document.createElement('pre');
-		vnfdCode.setAttribute("contentEditable", "true");
-		vnfdCode.style.background = "#f3f3f3";
-		vnfdCode.innerHTML = jsyaml.safeDump(vnfds[i]);
-		vnfdHeader.parentNode.appendChild(vnfdCode);
+		vnfdCode.appendChild(vnfdSubheader);
+		var code = document.createElement('pre');
+		code.className = "prettyprint lang-yaml";
+		code.setAttribute("contentEditable", "true");
+		code.innerHTML = jsyaml.safeDump(vnfds[i]);
+		vnfdCode.appendChild(code);
 	}
 }
 	
