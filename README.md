@@ -14,3 +14,7 @@ The current version is just a simple prototype to test the main functionality. B
 * support specifying high-level information in some kind of meta-descriptor that can be compiled into descriptors via command line --> more comfortable for advanced users who don't want to use the web interface
 * specify min/max number of VNFCs per VDU
 * allow to specify multiple VDUs per VNF?
+* Other types of descriptors?
+  * Test descriptors
+  * Policy descriptors (eg, placement constraints)
+* ensure consistency with specific schema version
