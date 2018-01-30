@@ -23,8 +23,6 @@ partner consortium (www.5gtango.eu). */
 
 var defaultVnfd;
 var defaultNsd;
-var genNsd;
-var genVnfds;
 
 // button click
 $('#submitBtn').on('click', loadDescriptors);
@@ -136,9 +134,6 @@ function editDescriptors() {
 		pos++;
 	}
 		
-	genNsd = nsd;
-	genVnfds = vnfds;
-		
 	showDescriptors(nsd, vnfds);
 }
 
@@ -152,7 +147,7 @@ function showDescriptors(nsd, vnfds) {
 	var nsdHeader = document.getElementById('nsd');
 	nsdHeader.innerHTML = "NSD";
 	var nsdCode = document.getElementById('nsd-code');
-	addCode(nsd, nsdCode);
+	addCode("nsd", nsd, nsdCode);
 	addDownloadButton("nsd", nsd, nsdCode);
 	
 	// print VNFDs
@@ -163,23 +158,25 @@ function showDescriptors(nsd, vnfds) {
 		var vnfdSubheader = document.createElement('h3');
 		vnfdSubheader.innerHTML = "VNFD " + i;
 		vnfdCode.appendChild(vnfdSubheader);
-		addCode(vnfds[i], vnfdCode);
+		addCode("vnfd" + i, vnfds[i], vnfdCode);
 		addDownloadButton("vnfd" + i, vnfds[i], vnfdCode);
 	}
 }
 
 
 // add the specified code in an editable text field
-function addCode(descriptorCode, parentNode) {
+function addCode(name, descriptor, parentNode) {
 	var code = document.createElement('pre');
+	code.id = name.toLowerCase() + "Code";
 	code.className = "prettyprint lang-yaml";
 	code.setAttribute("contentEditable", "true");
-	code.innerHTML = jsyaml.safeDump(descriptorCode);
+	code.innerHTML = jsyaml.safeDump(descriptor);
 	parentNode.appendChild(code);
 }
 
 
 // add a download button for the specified descriptor
+// name has to be consistent with the name of the corresponding code block (given to addCode)
 function addDownloadButton(name, descriptor, parentNode) {
 	var downloadBtn = document.createElement('button');
 	downloadBtn.id = name.toLowerCase() + "DownloadBtn";
@@ -187,7 +184,9 @@ function addDownloadButton(name, descriptor, parentNode) {
 	downloadBtn.type = "button";
 	downloadBtn.innerHTML = "Download " + name.toUpperCase();
 	downloadBtn.addEventListener('click', function() {
-		download(jsyaml.safeDump(descriptor), name.toLowerCase() + ".yaml");
+		// load current descriptor from code box to cover manual changes
+		currDescriptor = document.getElementById(name + "Code").innerHTML;
+		download(currDescriptor, name.toLowerCase() + ".yaml");
 	});
 	parentNode.appendChild(downloadBtn);
 }
@@ -212,9 +211,14 @@ function download(data, filename, type = "text/plain") {
 // create and download zip file of all descriptors
 function downloadAll() {
 	var zip = JSZip();
-	zip.file("nsd.yaml", jsyaml.safeDump(genNsd));
-	for (i = 0; i < genVnfds.length; i++) {
-		zip.file("vnfd" + i + ".yaml", jsyaml.safeDump(genVnfds[i]));
+	
+	// retrieve current descriptors to cover possible manual changes
+	divNode = document.getElementById('descriptors');
+	var children = divNode.getElementsByTagName('pre');
+	for (i = 0; i < children.length; i++) {
+		code = children[i].innerHTML;
+		yaml = jsyaml.load(code);
+		zip.file(yaml.name + ".yaml", code);
 	}
 	
 	zip.generateAsync({type:"blob"}).then(function(content) {
