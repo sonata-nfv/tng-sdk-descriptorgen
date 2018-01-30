@@ -23,10 +23,12 @@ partner consortium (www.5gtango.eu). */
 
 var defaultVnfd;
 var defaultNsd;
+var globalNsd;
 
 // button click
 $('#submitBtn').on('click', loadDescriptors);
 $('#newBtn').on('click', refresh);
+$('#downloadBtn').on('click', download);
 
 // hide newBtn and downloadBtn at the beginning
 window.onload = function() {
@@ -133,16 +135,14 @@ function editDescriptors() {
 		pos++;
 	}
 	
+	globalNsd = nsd;
+	
 	showDescriptors(nsd, vnfds);
 }
 
 
 // show the edited descriptors for further editing and copying
 function showDescriptors(nsd, vnfds) {	
-	// remove form (refresh to change form input)
-	//var frm1 = document.getElementById('frm1');
-	//frm1.parentNode.removeChild(frm1);
-	
 	// print instructions
 	document.getElementById('info').innerHTML = "Please edit, copy, and paste the generated descriptors below as needed.";
 	
@@ -171,4 +171,39 @@ function showDescriptors(nsd, vnfds) {
 		vnfdCode.appendChild(code);
 	}
 }
+
+
+// download the generated descriptors
+function download() {
+	// var descriptorFile = null, makeDescriptorFile = function() {
+		// var data = new Blob([globalNsd], {type: 'text/plain'});
+		// alert("inside");
+		// console.log(data);
+		// if (descriptorFile !== null) {
+			// window.URL.revokeObjectURL(descriptorFile);
+		// }
+		// descriptorFile = window.URL.createObjectURL(data);
+		// return descriptorFile;
+	// };
+	
+	downloadDescriptor(jsyaml.safeDump(globalNsd), "nsd.yaml");
+	// window.location = 
+}
+
+
+// trigger download of a file with the specified data and filename
+// adapted from https://stackoverflow.com/a/30832210/2745116
+function downloadDescriptor(data, filename, type = "text/plain") {
+    var file = new Blob([data], {type: type});
+	var a = document.createElement("a"), url = URL.createObjectURL(file);
+	a.href = url;
+	a.download = filename;
+	document.body.appendChild(a);
+	a.click();
+	setTimeout(function() {
+		document.body.removeChild(a);
+		window.URL.revokeObjectURL(url);  
+	}, 0); 
+}
+	
 	
