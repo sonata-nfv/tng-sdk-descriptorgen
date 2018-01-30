@@ -161,6 +161,8 @@ function showDescriptors(nsd, vnfds) {
 		addCode("vnfd" + i, vnfds[i], vnfdCode);
 		addDownloadButton("vnfd" + i, vnfds[i], vnfdCode);
 	}
+	
+	PR.prettyPrint();
 }
 
 
