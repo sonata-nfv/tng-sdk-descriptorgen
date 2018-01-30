@@ -23,11 +23,13 @@ partner consortium (www.5gtango.eu). */
 
 var defaultVnfd;
 var defaultNsd;
+var genNsd;
+var genVnfds;
 
 // button click
 $('#submitBtn').on('click', loadDescriptors);
 $('#newBtn').on('click', refresh);
-$('#downloadBtn').on('click', download);
+$('#downloadBtn').on('click', downloadAll);
 
 // hide newBtn and downloadBtn at the beginning
 window.onload = function() {
@@ -133,9 +135,10 @@ function editDescriptors() {
 		nsd.forwarding_graphs[0].network_forwarding_paths[0].connection_points[pos] = {connection_point_ref: nsd.virtual_links[i].connection_points_reference[1], position: pos+1};
 		pos++;
 	}
-	
-	globalNsd = nsd;
-	
+		
+	genNsd = nsd;
+	genVnfds = vnfds;
+		
 	showDescriptors(nsd, vnfds);
 }
 
@@ -205,4 +208,17 @@ function download(data, filename, type = "text/plain") {
 	}, 0); 
 }
 	
+	
+// create and download zip file of all descriptors
+function downloadAll() {
+	var zip = JSZip();
+	zip.file("nsd.yaml", jsyaml.safeDump(genNsd));
+	for (i = 0; i < genVnfds.length; i++) {
+		zip.file("vnfd" + i + ".yaml", jsyaml.safeDump(genVnfds[i]));
+	}
+	
+	zip.generateAsync({type:"blob"}).then(function(content) {
+		download(content, "descriptors.zip", "blob");
+	});
+}
 	
