@@ -25,7 +25,7 @@
 			<p class="lead">Please provide the following information or keep the default values.</p>
 		</div>
 	  
-		<div class="form-group">
+		<div id="input" class="form-group">
 			<label for="author">Author name:</label>
 			<input type="text" class="form-control" id="author" value="Tango" required>
 			<label for="vendor">Vendor name:</label>
@@ -50,6 +50,8 @@
 		
 		<div class="form-group">
 			<button id="submitBtn" type="submit" class="btn btn-primary btn-block">Generate</button>
+			<button id="newBtn" type="reset" class="btn btn-default btn-block">Generate new</button>
+			<button id="downloadBtn" type="button" class="btn btn-primary btn-block">Download</button>
 		</div>
 				
 		<p id="info"></p>
@@ -59,6 +61,9 @@
 		<p id="vnfd-code"></p>
 
     </main><!-- /.container -->
+	
+	<!-- Hide/show elements -->
+
 
     <!-- Bootstrap core JavaScript
     ================================================== -->

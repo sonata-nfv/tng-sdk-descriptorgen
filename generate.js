@@ -27,14 +27,28 @@ var defaultNsd;
 // button click
 $('#submitBtn').on('click', loadDescriptors);
 
+// hide newBtn and downloadBtn at the beginning
+window.onload = function() {
+	document.getElementById('newBtn').style.display = 'none';
+	document.getElementById('downloadBtn').style.display = 'none';
+}
+
 
 // load default VNFD and NSD from GitHub (asynchronous -> set VNFD, NSD and ask for user input when ready)
 function loadDescriptors() {
 	var vnfdUrl = "https://cdn.rawgit.com/sonata-nfv/tgn-descriptor-generator/c93807fc/default-vnfd.yml";
 	var nsdUrl = "https://cdn.rawgit.com/sonata-nfv/tgn-descriptor-generator/c93807fc/default-nsd.yml";
 	
+	// hide the generate button and input and show the generate new and download buttons
+	document.getElementById('input').style.display = 'none';
+	document.getElementById('submitBtn').style.display = 'none';
+	document.getElementById('newBtn').style.display = 'block';
+	document.getElementById('downloadBtn').style.display = 'block';
+	
 	$.get(vnfdUrl, setVnfd);
 	$.get(nsdUrl, setNsd);
+	
+	return false;			// better to return false after button click
 }
 function setVnfd(data) {
 	defaultVnfd = jsyaml.load(data);
