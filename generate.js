@@ -29,6 +29,13 @@ $('#submitBtn').on('click', loadDescriptors);
 $('#newBtn').on('click', refresh);
 $('#downloadBtn').on('click', downloadAll);
 
+// submit when pressing enter
+document.getElementById('input').onkeydown = function(e) {
+	if (e.keyCode == 13) {
+		loadDescriptors();
+	}
+};
+
 // hide newBtn and downloadBtn at the beginning
 window.onload = function() {
 	document.getElementById('newBtn').style.display = 'none';
