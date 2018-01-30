@@ -26,11 +26,17 @@ var defaultNsd;
 
 // button click
 $('#submitBtn').on('click', loadDescriptors);
+$('#newBtn').on('click', refresh);
 
 // hide newBtn and downloadBtn at the beginning
 window.onload = function() {
 	document.getElementById('newBtn').style.display = 'none';
 	document.getElementById('downloadBtn').style.display = 'none';
+}
+
+// reload window to allow creating new descriptors
+function refresh() {
+	location.reload();
 }
 
 
