@@ -23,7 +23,6 @@ partner consortium (www.5gtango.eu). */
 
 var defaultVnfd;
 var defaultNsd;
-var globalNsd;
 
 // button click
 $('#submitBtn').on('click', loadDescriptors);
@@ -150,11 +149,8 @@ function showDescriptors(nsd, vnfds) {
 	var nsdHeader = document.getElementById('nsd');
 	nsdHeader.innerHTML = "NSD";
 	var nsdCode = document.getElementById('nsd-code');
-	var code = document.createElement('pre');
-	code.className = "prettyprint lang-yaml";
-	code.setAttribute("contentEditable", "true");
-	code.innerHTML = jsyaml.safeDump(nsd);
-	nsdCode.appendChild(code);
+	addCode(nsd, nsdCode);
+	addDownloadButton("nsd", nsd, nsdCode);
 	
 	// print VNFDs
 	var vnfdHeader = document.getElementById('vnfds');
@@ -164,36 +160,39 @@ function showDescriptors(nsd, vnfds) {
 		var vnfdSubheader = document.createElement('h3');
 		vnfdSubheader.innerHTML = "VNFD " + i;
 		vnfdCode.appendChild(vnfdSubheader);
-		var code = document.createElement('pre');
-		code.className = "prettyprint lang-yaml";
-		code.setAttribute("contentEditable", "true");
-		code.innerHTML = jsyaml.safeDump(vnfds[i]);
-		vnfdCode.appendChild(code);
+		addCode(vnfds[i], vnfdCode);
+		addDownloadButton("vnfd" + i, vnfds[i], vnfdCode);
 	}
 }
 
 
-// download the generated descriptors
-function download() {
-	// var descriptorFile = null, makeDescriptorFile = function() {
-		// var data = new Blob([globalNsd], {type: 'text/plain'});
-		// alert("inside");
-		// console.log(data);
-		// if (descriptorFile !== null) {
-			// window.URL.revokeObjectURL(descriptorFile);
-		// }
-		// descriptorFile = window.URL.createObjectURL(data);
-		// return descriptorFile;
-	// };
-	
-	downloadDescriptor(jsyaml.safeDump(globalNsd), "nsd.yaml");
-	// window.location = 
+// add the specified code in an editable text field
+function addCode(descriptorCode, parentNode) {
+	var code = document.createElement('pre');
+	code.className = "prettyprint lang-yaml";
+	code.setAttribute("contentEditable", "true");
+	code.innerHTML = jsyaml.safeDump(descriptorCode);
+	parentNode.appendChild(code);
+}
+
+
+// add a download button for the specified descriptor
+function addDownloadButton(name, descriptor, parentNode) {
+	var downloadBtn = document.createElement('button');
+	downloadBtn.id = name.toLowerCase() + "DownloadBtn";
+	downloadBtn.className = "btn btn-primary btn-block";
+	downloadBtn.type = "button";
+	downloadBtn.innerHTML = "Download " + name.toUpperCase();
+	downloadBtn.addEventListener('click', function() {
+		download(jsyaml.safeDump(descriptor), name.toLowerCase() + ".yaml");
+	});
+	parentNode.appendChild(downloadBtn);
 }
 
 
 // trigger download of a file with the specified data and filename
 // adapted from https://stackoverflow.com/a/30832210/2745116
-function downloadDescriptor(data, filename, type = "text/plain") {
+function download(data, filename, type = "text/plain") {
     var file = new Blob([data], {type: type});
 	var a = document.createElement("a"), url = URL.createObjectURL(file);
 	a.href = url;
