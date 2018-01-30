@@ -24,14 +24,45 @@ partner consortium (www.5gtango.eu). */
 var defaultVnfd;
 var defaultNsd;
 
+// button click
+$('#submitBtn').on('click', loadDescriptors);
+$('#newBtn').on('click', refresh);
+$('#downloadBtn').on('click', downloadAll);
+
+// submit when pressing enter
+document.getElementById('input').onkeydown = function(e) {
+	if (e.keyCode == 13) {
+		loadDescriptors();
+	}
+};
+
+// hide newBtn and downloadBtn at the beginning
+window.onload = function() {
+	document.getElementById('newBtn').style.display = 'none';
+	document.getElementById('downloadBtn').style.display = 'none';
+}
+
+// reload window to allow creating new descriptors
+function refresh() {
+	location.reload();
+}
+
 
 // load default VNFD and NSD from GitHub (asynchronous -> set VNFD, NSD and ask for user input when ready)
 function loadDescriptors() {
 	var vnfdUrl = "https://cdn.rawgit.com/sonata-nfv/tgn-descriptor-generator/c93807fc/default-vnfd.yml";
 	var nsdUrl = "https://cdn.rawgit.com/sonata-nfv/tgn-descriptor-generator/c93807fc/default-nsd.yml";
 	
+	// hide the generate button and input and show the generate new and download buttons
+	document.getElementById('input').style.display = 'none';
+	document.getElementById('submitBtn').style.display = 'none';
+	document.getElementById('newBtn').style.display = 'block';
+	document.getElementById('downloadBtn').style.display = 'block';
+	
 	$.get(vnfdUrl, setVnfd);
 	$.get(nsdUrl, setNsd);
+	
+	return false;			// better to return false after button click
 }
 function setVnfd(data) {
 	defaultVnfd = jsyaml.load(data);
@@ -109,42 +140,98 @@ function editDescriptors() {
 		nsd.forwarding_graphs[0].network_forwarding_paths[0].connection_points[pos] = {connection_point_ref: nsd.virtual_links[i].connection_points_reference[1], position: pos+1};
 		pos++;
 	}
-	
+		
 	showDescriptors(nsd, vnfds);
 }
 
 
 // show the edited descriptors for further editing and copying
-function showDescriptors(nsd, vnfds) {
-	// remove form (refresh to change form input)
-	var frm1 = document.getElementById('frm1');
-	frm1.parentNode.removeChild(frm1);
-	
+function showDescriptors(nsd, vnfds) {	
 	// print instructions
 	document.getElementById('info').innerHTML = "Please edit, copy, and paste the generated descriptors below as needed.";
 	
 	// print NSD
 	var nsdHeader = document.getElementById('nsd');
 	nsdHeader.innerHTML = "NSD";
-	var nsdCode = document.createElement('pre');
-	nsdCode.setAttribute("contentEditable", "true");
-	nsdCode.style.background = "#f3f3f3";
-	nsdCode.innerHTML = jsyaml.safeDump(nsd);
-	nsdHeader.parentNode.appendChild(nsdCode);
+	var nsdCode = document.getElementById('nsd-code');
+	addCode("nsd", nsd, nsdCode);
+	addDownloadButton("nsd", nsd, nsdCode);
 	
 	// print VNFDs
-	var vnfdHeader = document.createElement('h2');
+	var vnfdHeader = document.getElementById('vnfds');
 	vnfdHeader.innerHTML = "VNFDs";
-	nsdHeader.parentNode.appendChild(vnfdHeader);
+	var vnfdCode = document.getElementById('vnfd-code');
 	for (i = 0; i < vnfds.length; i++) {
 		var vnfdSubheader = document.createElement('h3');
 		vnfdSubheader.innerHTML = "VNFD " + i;
-		vnfdHeader.parentNode.appendChild(vnfdSubheader);
-		var vnfdCode = document.createElement('pre');
-		vnfdCode.setAttribute("contentEditable", "true");
-		vnfdCode.style.background = "#f3f3f3";
-		vnfdCode.innerHTML = jsyaml.safeDump(vnfds[i]);
-		vnfdHeader.parentNode.appendChild(vnfdCode);
+		vnfdCode.appendChild(vnfdSubheader);
+		addCode("vnfd" + i, vnfds[i], vnfdCode);
+		addDownloadButton("vnfd" + i, vnfds[i], vnfdCode);
 	}
+	
+	PR.prettyPrint();
+}
+
+
+// add the specified code in an editable text field
+function addCode(name, descriptor, parentNode) {
+	var code = document.createElement('pre');
+	code.id = name.toLowerCase() + "Code";
+	code.className = "prettyprint lang-yaml";
+	code.setAttribute("contentEditable", "true");
+	code.innerHTML = jsyaml.safeDump(descriptor);
+	parentNode.appendChild(code);
+}
+
+
+// add a download button for the specified descriptor
+// name has to be consistent with the name of the corresponding code block (given to addCode)
+function addDownloadButton(name, descriptor, parentNode) {
+	var downloadBtn = document.createElement('button');
+	downloadBtn.id = name.toLowerCase() + "DownloadBtn";
+	downloadBtn.className = "btn btn-primary btn-block";
+	downloadBtn.type = "button";
+	downloadBtn.innerHTML = "Download " + name.toUpperCase();
+	downloadBtn.addEventListener('click', function() {
+		// load current descriptor from code box to cover manual changes
+		currDescriptor = document.getElementById(name + "Code").innerHTML;
+		download(currDescriptor, name.toLowerCase() + ".yaml");
+	});
+	parentNode.appendChild(downloadBtn);
+}
+
+
+// trigger download of a file with the specified data and filename
+// adapted from https://stackoverflow.com/a/30832210/2745116
+function download(data, filename, type = "text/plain") {
+    var file = new Blob([data], {type: type});
+	var a = document.createElement("a"), url = URL.createObjectURL(file);
+	a.href = url;
+	a.download = filename;
+	document.body.appendChild(a);
+	a.click();
+	setTimeout(function() {
+		document.body.removeChild(a);
+		window.URL.revokeObjectURL(url);  
+	}, 0); 
+}
+	
+	
+// create and download zip file of all descriptors
+function downloadAll() {
+	var zip = JSZip();
+	
+	// retrieve current descriptors to cover possible manual changes
+	divNode = document.getElementById('descriptors');
+	var children = divNode.getElementsByTagName('pre');
+	for (i = 0; i < children.length; i++) {
+		code = children[i].innerHTML;
+		yaml = jsyaml.load(code);
+		zip.file(yaml.name + ".yaml", code);
+	}
+	
+	zip.generateAsync({type:"blob"}).then(function(content) {
+		download(content, "descriptors.zip", "blob");
+	});
 }
 	

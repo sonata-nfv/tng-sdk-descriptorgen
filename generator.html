@@ -1,36 +1,84 @@
-<!DOCTYPE html>
-<meta charset="UTF-8">
-<html>
-<title>5GTANGO descriptor generator</title>
-<body>
+<!-- TODO: check source map error; show result on new html page; adjust generate.js (remove frm1 removal) -->
 
-	<h1>5GTANGO descriptor generator</h1>
-	<form id="frm1">
-		<p>Please provide the following information or use the defaults</p>
-		Author name: <input type="text" id="author" value="Tango" required><br>
-		Vendor name: <input type="text" id="vendor" value="Tango" required><br>
-		Service name: <input type="text" id="name" value="tango-nsd" required><br>
-		Service description: <input type="text" id="description" value="A default NSD with two default VNFDs" required><br>
-		Number of VNFs:	<select id="vnfs">
-							<option value="1">1</option>
-							<option selected value="2">2</option>
-							<option value="3">3</option>
-							<option value="4">4</option>
-							<option value="5">5</option>
-						</select><br>
-		VNF type: 	<select id="vnfType">
-						<option value="ubuntu">ubuntu</option>
-					</select><br>
-		<br>
-		<input type="button" onclick="loadDescriptors()" value="Submit">
-	</form>
-	<p id="info"></p>
-	<h2 id="nsd"></h2>
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>5GTANGO Descriptor Generator</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="bootstrap/starter-template.css" rel="stylesheet">
+  </head>
+
+  
+  <body>
+    <main role="main" class="container">
+
+		<div class="starter-template">
+			<img src="5GTANGO_logo.png" alt="5GTANGO logo">
+			<h1>5GTANGO Descriptor Generator</h1>
+			<p class="lead">Please provide the following information or keep the default values.</p>
+		</div>
+	  
+		<div id="input" class="form-group">
+			<label for="author">Author name:</label>
+			<input type="text" class="form-control" id="author" value="Tango" required>
+			<label for="vendor">Vendor name:</label>
+			<input type="text" class="form-control" id="vendor" value="Tango" required>
+			<label for="name">Service name:</label>
+			<input type="text" class="form-control" id="name" value="tango-nsd" required>
+			<label for="description">Service description:</label>
+			<input type="text" class="form-control" id="description" value="Default description" required>
+			<label for="vnfs">Number of VNFs:</label>
+			<select class="form-control" id="vnfs">
+				<option value="1">1</option>
+				<option selected value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+			</select>
+			<label for="vnfType">VNF type:</label>
+			<select class="form-control" id="vnfType">
+				<option value="ubuntu">ubuntu</option>
+			</select>
+		</div>
+		
+		<div class="form-group">
+			<button id="submitBtn" type="submit" class="btn btn-primary btn-block">Generate</button>
+			<button id="newBtn" type="reset" class="btn btn-default btn-block">Generate new</button>
+			<button id="downloadBtn" type="button" class="btn btn-primary btn-block">Download all</button>
+		</div>
+		
+		<div id="descriptors" class="form-group">
+			<p id="info"></p>
+			<h2 id="nsd"></h2>
+			<p id="nsd-code"></p>
+			<h2 id="vnfds"></h2>
+			<p id="vnfd-code"></p>
+		</div>
+
+    </main><!-- /.container -->
 	
-	
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="bootstrap/jquery-3.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="bootstrap/popper.js"></script>
+    <script src="bootstrap/bootstrap.js"></script>
+  
+
+	<!-- Generation script and dependencies -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 	<script src="https://cdn.rawgit.com/nodeca/js-yaml/bee7e998/dist/js-yaml.min.js"></script>
-	
+	<script src="jszip/jszip.js"></script>
+	<link rel="stylesheet" type="text/css" href="prettify/prettify.css">
+	<script type="text/javascript" src="prettify/prettify.js"></script>
 	<script src="generate.js"></script>
-</body>
-</html> 
+</body></html>
