@@ -148,7 +148,7 @@ function editDescriptors() {
 // show the edited descriptors for further editing and copying
 function showDescriptors(nsd, vnfds) {	
 	// print instructions
-	document.getElementById('info').innerHTML = "Please edit, copy, and paste the generated descriptors below as needed.";
+	document.getElementById('info').innerHTML = "Please edit, copy & paste, or download the descriptors below as needed.";
 	
 	// print NSD
 	var nsdHeader = document.getElementById('nsd');
