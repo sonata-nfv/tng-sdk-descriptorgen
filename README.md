@@ -5,8 +5,19 @@ The resulting VNFDs and NSDs can still be modified as needed.
 
 ## Installation and usage
 
-Simply download the repository and open `generator.html` in a web browser (tested with Firefox 58).
+Simply download the repository and open `index.html` in a web browser (tested with Firefox 58).
 
+
+## Docker deployment
+
+If you want to deploy the descriptor generator as a docker container, you can do so using the `Dockerfile`. Simply download the repository and run from within:
+* `docker build -t tng-sdk-descriptorgen:latest .` to create the docker image
+* `docker images` to check that the image is there
+* `docker run -d -p 80:80 tng-sdk-descriptorgen:latest` to start the docker container
+* `docker container ls` to check that the container is running
+* Open (localhost)[localhost] in your web browser to access the descriptor generation web interface
+
+## Workflow
 ### Input
 
 The web interface asks for high-level information about the network service such as author and service name. For all fields, default values are provided to support the easy and fast generation of new descriptors. Clicking the "Generate" button triggers the generation of the descriptors.
