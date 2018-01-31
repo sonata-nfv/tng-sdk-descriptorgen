@@ -11,13 +11,13 @@ Simply download the repository and open `generator.html` in a web browser (teste
 
 The web interface asks for high-level information about the network service such as author and service name. For all fields, default values are provided to support the easy and fast generation of new descriptors. Clicking the "Generate" button triggers the generation of the descriptors.
 
-![input](doc/input.png)
+![input](docs/input.png)
 
 ### Output
 
 The generated descriptors are directly shown in code boxes that allow further manual adjustments and that provide yaml code highlighting. Once satisfied with the result, the descriptors can be downloaded individually or bundled together in a zip file.
 
-![input](doc/output.png)
+![input](docs/output.png)
 
 
 
