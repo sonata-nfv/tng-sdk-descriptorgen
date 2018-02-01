@@ -31,6 +31,8 @@ Once installed, the unit tests can be executed with
 
 This triggers the tests on Firefox and Chrome (you'll see browser windows pop up and close soon after). Terminal 2 informs about the test progress and success. If and only if all tests finish successfully, `protractor` exits with code 0.
 
+If you have trouble installing or running `protractor`, try using `sudo`.
+
 ## Workflow
 ### Input
 
