@@ -17,6 +17,22 @@ If you want to deploy the descriptor generator as a docker container, you can do
 * `docker container ls` to check that the container is running
 * Open (localhost)[localhost] in your web browser to access the descriptor generation web interface
 
+## Tests
+
+To test that everything is working correctly, you can use the provided unit tests in the `test` directory. The tests use the [Protractor testing framework](http://www.protractortest.org/#/), which can be installed using
+
+* `npm install -g protractor`
+* `webdriver-manager update`
+
+Once installed, the unit tests can be executed with
+
+* Terminal 1: `webdriver-manager start`
+* Terminal 2 (inside the `test` directory): `protractor conf.js`
+
+This triggers the tests on Firefox and Chrome (you'll see browser windows pop up and close soon after). Terminal 2 informs about the test progress and success. If and only if all tests finish successfully, `protractor` exits with code 0.
+
+If you have trouble installing or running `protractor`, try using `sudo`.
+
 ## Workflow
 ### Input
 
@@ -35,6 +51,8 @@ The generated descriptors are directly shown in code boxes that allow further ma
 ## Development and contribution
 
 Please check or create [issues](https://github.com/sonata-nfv/tng-sdk-descriptorgen/issues) matching the current and future development steps.
+
+Contribution is very welcome! Please, fork the repository and create pull requests to submit implemented features. Make sure all unit tests pass before creating a pull request.
 
 
 
