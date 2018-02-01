@@ -1,6 +1,6 @@
 exports.config = {
   seleniumAddress: 'http://localhost:4444/wd/hub',
-  specs: ['input-spec.js'],
+  specs: ['*.js'],
   multiCapabilities: [{
     browserName: 'firefox'
   }, {
