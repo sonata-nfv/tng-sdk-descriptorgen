@@ -1,11 +1,9 @@
 exports.config = {
   seleniumAddress: 'http://localhost:4444/wd/hub',
   specs: ['*.js'],
-  multiCapabilities: [{
+  capabilities: {
     browserName: 'firefox'
-  }, {
-    browserName: 'chrome'
-  }],
+  },
   baseUrl: 'file:///' + __dirname + '/../index.html',
   onPrepare: function() {
 	browser.ignoreSynchronization = true;
