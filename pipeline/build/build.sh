@@ -1,3 +1,3 @@
 #!/bin/bash
-docker build -f ../../Dockerfile -t tng-sdk-descriptorgen:latest ../../.
+docker build -f ../../DockerfilePipeline -t tng-sdk-descriptorgen:pipeline ../../.
 

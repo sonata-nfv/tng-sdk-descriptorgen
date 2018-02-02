@@ -11,15 +11,17 @@ Simply download the repository and open `index.html` in a web browser (tested wi
 ## Docker deployment
 
 If you want to deploy the descriptor generator as a docker container, you can do so using the `Dockerfile`. Simply download the repository and run from within:
-* `docker build -t tng-sdk-descriptorgen:latest .` to create the docker image
+* `docker build -f Dockerfile -t tng-sdk-descriptorgen:latest .` to create the docker image
 * `docker images` to check that the image is there
 * `docker run -d -p 80:80 tng-sdk-descriptorgen:latest` to start the docker container
 * `docker container ls` to check that the container is running
-* Open (localhost)[localhost] in your web browser to access the descriptor generation web interface
+* Open localhost in your web browser to access the descriptor generation web interface
+
+`DockerfilePipeline` is just used for the Jenkins pipeline.
 
 ## Tests
 
-To test that everything is working correctly, you can use the provided unit tests in the `test` directory. The tests use the [Protractor testing framework](http://www.protractortest.org/#/), which can be installed using
+To test that everything is working correctly, you can use the provided unit tests in the `pipeline/unittest` directory. The tests use the [Protractor testing framework](http://www.protractortest.org/#/), which can be installed using
 
 * `npm install -g protractor`
 * `webdriver-manager update`
@@ -28,7 +30,7 @@ Protractor needs Java, which can be installed using `sudo apt-get install defaul
 Once installed, the unit tests can be executed with
 
 * Terminal 1: `webdriver-manager start`
-* Terminal 2 (inside the `test` directory): `protractor conf.js`
+* Terminal 2 (inside the `pipeline/unittest` directory): `protractor conf.js`
 
 This triggers the tests (you'll see browser windows pop up and close soon after). By default, Firefox is used, but another browser can be configured in `conf.js`. Terminal 2 informs about the test progress and success. If and only if all tests finish successfully, `protractor` exits with code 0.
 

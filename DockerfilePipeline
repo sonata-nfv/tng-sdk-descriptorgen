@@ -1,0 +1,18 @@
+FROM ubuntu:xenial
+
+# install required packages
+RUN apt-get clean
+RUN apt-get update -y && apt-get upgrade -y \
+    && apt-get install -y curl
+   
+# install current nodejs and npm
+RUN curl -sL https://deb.nodesource.com/setup_9.x | bash - && \
+    apt-get install -y nodejs build-essential
+RUN npm install -g npm
+
+# install and setup protractor
+RUN npm install -g protractor
+RUN webdriver-manager update
+
+# copy descriptorgen
+COPY . ~/tng-sdk-descriptorgen
