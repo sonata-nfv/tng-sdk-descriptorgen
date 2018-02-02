@@ -10,7 +10,7 @@ Simply download the repository and open `index.html` in a web browser (tested wi
 
 ## Docker deployment
 
-If you want to deploy the descriptor generator as a docker container, you can do so using the `Dockerfile`. Simply download the repository and run from within:
+If you want to deploy the descriptor generator as a docker container, you can do so using the `Dockerfile`. The container will run a nginx webserver serving the descriptor generator. Simply download the repository and run from within:
 * `docker build -f Dockerfile -t tng-sdk-descriptorgen:latest .` to create the docker image
 * `docker images` to check that the image is there
 * `docker run -d -p 80:80 tng-sdk-descriptorgen:latest` to start the docker container

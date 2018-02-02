@@ -4,7 +4,7 @@ exports.config = {
   capabilities: {
     browserName: 'firefox'
   },
-  baseUrl: 'file:///' + __dirname + '/../index.html',
+  baseUrl: 'file:///' + __dirname + '/../../index.html',
   onPrepare: function() {
 	browser.ignoreSynchronization = true;
     browser.resetUrl = 'file:///';
