@@ -3,12 +3,12 @@ FROM ubuntu:xenial
 # install required packages
 RUN apt-get clean
 RUN apt-get update -y && apt-get upgrade -y \
-    && apt-get install -y curl default-jre
+    && apt-get install -y wget curl default-jre
     
-# TODO: install chrome
-#RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-#RUN echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | sudo tee /etc/apt/sources.list.d/google-chrome.list
-#RUN apt-get update -y && apt-get install -y google-chrome-stable
+# install chrome
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+RUN echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list
+RUN apt-get update -y && apt-get install -y google-chrome-stable
    
 # install up-to-date nodejs and npm
 RUN curl -sL https://deb.nodesource.com/setup_9.x | bash - && \
