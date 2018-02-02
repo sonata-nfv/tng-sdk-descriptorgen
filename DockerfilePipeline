@@ -15,4 +15,4 @@ RUN npm install -g protractor
 RUN webdriver-manager update
 
 # copy descriptorgen
-COPY . ~/tng-sdk-descriptorgen
+COPY . /tng-sdk-descriptorgen
