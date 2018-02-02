@@ -4,7 +4,7 @@ exports.config = {
   capabilities: {
     browserName: 'chrome',
 	chromeOptions: {
-		args: ['--headless']
+		args: ['--headless', '--disable-gpu', '--no-sandbox', '--window-size=1920x1200']
 	}
   },
   baseUrl: 'file:///' + __dirname + '/../../index.html',

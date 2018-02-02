@@ -24,15 +24,15 @@ If you want to deploy the descriptor generator as a docker container, you can do
 To test that everything is working correctly, you can use the provided unit tests in the `pipeline/unittest` directory. The tests use the [Protractor testing framework](http://www.protractortest.org/#/), which can be installed using
 
 * `npm install -g protractor`
-* `webdriver-manager update`
+* `sudo webdriver-manager update`
 
 Protractor needs Java, which can be installed using `sudo apt-get install default-jdk` on Ubuntu.
 Once installed, the unit tests can be executed with
 
-* Terminal 1: `webdriver-manager start`
+* Terminal 1: `sudo webdriver-manager start`
 * Terminal 2 (inside the `pipeline/unittest` directory): `protractor conf.js`
 
-This triggers the tests (you'll see browser windows pop up and close soon after). By default, Firefox is used, but another browser can be configured in `conf.js`. Terminal 2 informs about the test progress and success. If and only if all tests finish successfully, `protractor` exits with code 0.
+This triggers the tests using Chrome in headless mode. Terminal 2 informs about the test progress and success. If and only if all tests finish successfully, `protractor` exits with code 0.
 
 If you have trouble installing or running `protractor`, try using `sudo`.
 
