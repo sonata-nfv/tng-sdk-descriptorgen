@@ -17,12 +17,13 @@ pipeline {
         }
         stage('Style check') {
             steps {
-                echo 'Stage: Style check... not yet implemented'
+                echo 'Stage: Style check not yet implemented (there is no js standard)'
             }
         }
         stage('Container publication') {
             steps {
-                echo 'Stage: Container publication... (not implemented)'
+                echo 'Stage: Container publication...'
+                sh "pipeline/publication/publication.sh"
             }
         }
         stage('Deploy in integration') {
