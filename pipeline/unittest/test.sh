@@ -10,7 +10,8 @@ docker rm -fv descriptorgen || true
 echo "Previous container(s) stopped and removed"
 
 docker run --name descriptorgen --rm -i -d 5gtango/tng-sdk-descriptorgen:test
-echo "Test container running"
+docker exec -i -d descriptorgen webdriver-manager update
+echo "Test container running and up-to-date"
 sleep 1
 docker exec -i -d descriptorgen webdriver-manager start
 echo "Webdriver-manager starting (for protractor unit tests)"
