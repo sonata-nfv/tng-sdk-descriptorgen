@@ -62,14 +62,16 @@ function loadDescriptors() {
 	$.get(vnfdUrl, setVnfd);
 	$.get(nsdUrl, setNsd);
 	
-	return false;			// better to return false after button click
+	return false;
 }
+
 function setVnfd(data) {
 	defaultVnfd = jsyaml.load(data);
 	
 	if (typeof defaultNsd != 'undefined')
 		editDescriptors();
 }
+
 function setNsd(data) {
 	defaultNsd = jsyaml.load(data);
 	
