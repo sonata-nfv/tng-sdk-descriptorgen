@@ -62,14 +62,16 @@ function loadDescriptors() {
 	$.get(vnfdUrl, setVnfd);
 	$.get(nsdUrl, setNsd);
 	
-	return false;			// better to return false after button click
+	return false;
 }
+
 function setVnfd(data) {
 	defaultVnfd = jsyaml.load(data);
 	
 	if (typeof defaultNsd != 'undefined')
 		editDescriptors();
 }
+
 function setNsd(data) {
 	defaultNsd = jsyaml.load(data);
 	
@@ -194,7 +196,7 @@ function addDownloadButton(name, descriptor, parentNode) {
 	downloadBtn.innerHTML = "Download " + name.toUpperCase();
 	downloadBtn.addEventListener('click', function() {
 		// load current descriptor from code box to cover manual changes
-		currDescriptor = document.getElementById(name + "Code").innerHTML;
+		currDescriptor = document.getElementById(name + "Code").innerText;
 		download(currDescriptor, name.toLowerCase() + ".yaml");
 	});
 	parentNode.appendChild(downloadBtn);
@@ -203,7 +205,7 @@ function addDownloadButton(name, descriptor, parentNode) {
 
 // trigger download of a file with the specified data and filename
 // adapted from https://stackoverflow.com/a/30832210/2745116
-function download(data, filename, type = "text/plain") {
+function download(data, filename, type = "text/yaml") {
     var file = new Blob([data], {type: type});
 	var a = document.createElement("a"), url = URL.createObjectURL(file);
 	a.href = url;
@@ -225,7 +227,7 @@ function downloadAll() {
 	divNode = document.getElementById('descriptors');
 	var children = divNode.getElementsByTagName('pre');
 	for (i = 0; i < children.length; i++) {
-		code = children[i].innerHTML;
+		code = children[i].innerText;
 		yaml = jsyaml.load(code);
 		zip.file(yaml.name + ".yaml", code);
 	}
