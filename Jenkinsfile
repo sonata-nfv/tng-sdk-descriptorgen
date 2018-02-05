@@ -12,7 +12,7 @@ pipeline {
         stage('Unittests') {
             steps {
                 echo 'Stage: Testing...'
-                sh "pipeline/unittest/test.sh"
+                #sh "pipeline/unittest/test.sh"
             }
         }
         stage('Style check') {
