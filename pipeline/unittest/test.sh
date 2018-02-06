@@ -7,7 +7,7 @@ set -e
 docker rm -fv descriptorgen || true
 echo "Previous container(s) stopped and removed"
 
-docker run --name descriptorgen --rm -i -d registry.sonata-nfv.eu:5000/tng-sdk-descriptorgen:test
+docker run --name descriptorgen --privileged -i -d registry.sonata-nfv.eu:5000/tng-sdk-descriptorgen:test
 docker exec -i -d descriptorgen webdriver-manager update
 echo "Test container running and up-to-date"
 sleep 1
