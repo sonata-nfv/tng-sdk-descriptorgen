@@ -30,7 +30,7 @@ $('#newBtn').on('click', refresh);
 $('#downloadBtn').on('click', downloadAll);
 
 // submit when pressing enter
-document.getElementById('input').onkeydown = function(e) {
+document.getElementById('nsdInput').onkeydown = function(e) {
 	if (e.keyCode == 13) {
 		loadDescriptors();
 	}
@@ -48,13 +48,17 @@ function refresh() {
 }
 
 
+// TODO: change number of VNFs: Add/remove corresponding fields
+
+
 // load default VNFD and NSD from GitHub (asynchronous -> set VNFD, NSD and ask for user input when ready)
 function loadDescriptors() {
 	var vnfdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-schema/4ea30d03/function-descriptor/examples/default-vnfd.yml";
 	var nsdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-schema/4ea30d03/service-descriptor/examples/default-nsd.yml";
 	
 	// hide the generate button and input and show the generate new and download buttons
-	document.getElementById('input').style.display = 'none';
+	document.getElementById('nsdInput').style.display = 'none';
+    document.getElementById('vnfdInput').style.display = 'none';
 	document.getElementById('submitBtn').style.display = 'none';
 	document.getElementById('newBtn').style.display = 'block';
 	document.getElementById('downloadBtn').style.display = 'block';

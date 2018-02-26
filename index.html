@@ -15,13 +15,14 @@
     <body>
         <main role="main" class="container">
 
-            <div class="starter-template">
+            <!--TODO: center header-->
+            <div class="mx-auto">
                 <img src="5GTANGO_logo.png" alt="5GTANGO logo" id="logo">
                 <h1>5GTANGO Descriptor Generator</h1>
                 <p id="info" class="lead">Please provide the following information or keep the default values.</p>
             </div>
 
-            <div id="input" class="form-group">
+            <div id="nsdInput" class="form-group my-5">
                 <label for="author">Author name:</label>
                 <input type="text" class="form-control" id="author" value="Tango" required>
                 <label for="vendor">Vendor name:</label>
@@ -30,6 +31,9 @@
                 <input type="text" class="form-control" id="name" value="tango-nsd" required>
                 <label for="description">Service description:</label>
                 <input type="text" class="form-control" id="description" value="Default description" required>
+            </div>
+
+            <div id="vnfdInput" class="form-group my-5">
                 <label for="vnfs">Number of VNFs:</label>
                 <select class="form-control" id="vnfs">
                     <option value="1">1</option>
@@ -63,6 +67,7 @@
         </main><!-- /.container -->
 
 
+        <!--TODO: download bootstrap and use locally if TLS handshake takes too long-->
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
