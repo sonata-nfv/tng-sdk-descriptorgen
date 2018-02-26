@@ -29,9 +29,6 @@ $('#submitBtn').on('click', loadDescriptors);
 $('#newBtn').on('click', refresh);
 $('#downloadBtn').on('click', downloadAll);
 
-// file upload
-document.getElementById('vnfd_upload').addEventListener('change', readFile, false);
-
 // submit when pressing enter
 document.getElementById('input').onkeydown = function(e) {
 	if (e.keyCode == 13) {
@@ -199,7 +196,7 @@ function addDownloadButton(name, descriptor, parentNode) {
 	downloadBtn.innerHTML = "Download " + name.toUpperCase();
 	downloadBtn.addEventListener('click', function() {
 		// load current descriptor from code box to cover manual changes
-		currDescriptor = document.getElementById(name + "Code").innerText;
+		var currDescriptor = document.getElementById(name + "Code").innerText;
 		download(currDescriptor, name.toLowerCase() + ".yaml");
 	});
 	parentNode.appendChild(downloadBtn);
@@ -227,11 +224,11 @@ function downloadAll() {
 	var zip = JSZip();
 	
 	// retrieve current descriptors to cover possible manual changes
-	divNode = document.getElementById('descriptors');
+	var divNode = document.getElementById('descriptors');
 	var children = divNode.getElementsByTagName('pre');
 	for (i = 0; i < children.length; i++) {
-		code = children[i].innerText;
-		yaml = jsyaml.load(code);
+		var code = children[i].innerText;
+		var yaml = jsyaml.load(code);
 		zip.file(yaml.name + ".yaml", code);
 	}
 	
@@ -242,16 +239,15 @@ function downloadAll() {
 
 
 // upload an existing VNFD
-function readFile(evt) {
-    //Retrieve the first (and only!) File from the FileList object
-    // var f = evt.target.files[0];
-    var f = document.getElementById("vnfd_upload").files[0];
+function readFile() {
+    var f = document.getElementById("vnfd_upload").files[0];     // only the first file
 
     if (f) {
         var r = new FileReader();
         r.onload = function(vnfdFile) {
             var contents = vnfdFile.target.result;
-            console.log(contents);
+            var vnfd = jsyaml.load(contents);
+            console.log(vnfd.author);
         };
         r.readAsText(f);
     }
