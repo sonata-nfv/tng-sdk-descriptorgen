@@ -29,6 +29,9 @@ $('#submitBtn').on('click', loadDescriptors);
 $('#newBtn').on('click', refresh);
 $('#downloadBtn').on('click', downloadAll);
 
+// file upload
+document.getElementById('vnfd_upload').addEventListener('change', readFile, false);
+
 // submit when pressing enter
 document.getElementById('input').onkeydown = function(e) {
 	if (e.keyCode == 13) {
@@ -40,7 +43,7 @@ document.getElementById('input').onkeydown = function(e) {
 window.onload = function() {
 	document.getElementById('newBtn').style.display = 'none';
 	document.getElementById('downloadBtn').style.display = 'none';
-}
+};
 
 // reload window to allow creating new descriptors
 function refresh() {
@@ -236,4 +239,23 @@ function downloadAll() {
 		download(content, "descriptors.zip", "blob");
 	});
 }
-	
+
+
+// upload an existing VNFD
+function readFile(evt) {
+    //Retrieve the first (and only!) File from the FileList object
+    // var f = evt.target.files[0];
+    var f = document.getElementById("vnfd_upload").files[0];
+
+    if (f) {
+        var r = new FileReader();
+        r.onload = function(vnfdFile) {
+            var contents = vnfdFile.target.result;
+            console.log(contents);
+        };
+        r.readAsText(f);
+    }
+    else {
+        alert("Failed to load file");
+    }
+}
