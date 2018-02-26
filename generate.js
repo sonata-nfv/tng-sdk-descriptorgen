@@ -238,20 +238,26 @@ function downloadAll() {
 }
 
 
-// upload an existing VNFD
+// upload and read an existing VNFD
 function readFile() {
-    var f = document.getElementById("vnfd_upload").files[0];     // only the first file
+    var file = document.getElementById("vnfd_upload").files[0];     // only the first file
 
-    if (f) {
-        var r = new FileReader();
-        r.onload = function(vnfdFile) {
-            var contents = vnfdFile.target.result;
+    if (file) {
+        var reader = new FileReader();
+        reader.readAsText(file);
+        reader.onload = function(evt) {
+            var contents = evt.target.result;
             var vnfd = jsyaml.load(contents);
-            console.log(vnfd.author);
+
+            // add new VNFD as option
+            var vnfTypes = document.getElementById("vnfType");
+            var option = document.createElement("option");
+            option.text = vnfd.name;
+            vnfTypes.add(option);
+
+            // show success
+            document.getElementById("fileHelp").innerText = "Uploaded " + file.name + " successfully."
         };
-        r.readAsText(f);
-    }
-    else {
-        alert("Failed to load file");
+        reader.onerror = function(evt) {alert("Error: Could not read file.")}
     }
 }
