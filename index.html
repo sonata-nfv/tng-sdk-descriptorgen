@@ -39,7 +39,7 @@
 
                 <label for="vnfd_upload">VNFD upload</label>
                 <input type="file" class="form-control-file" id="vnfd_upload" aria-describedby="fileHelp" onchange="uploadVnfd();">
-                <small id="fileHelp" class="form-text text-muted">To reuse existing VNFs in the network service, upload their descriptors (VNFDs).</small>
+                <small id="fileHelp" class="form-text text-muted mb-2">To reuse existing VNFs in the network service, upload their descriptors (VNFDs).</small>
 
                 <label id="vnfsLabel" for="vnfGroup1">VNFs</label>
                 <div class="input-group my-1" id="vnfGroup1">
@@ -47,7 +47,7 @@
                         <option value="default">default</option>
                     </select>
                     <span class="input-group-btn">
-                        <button class="btn rem-btn" type="button">-</button>
+                        <button class="btn rem-btn" type="button">Remove VNF</button>
                     </span>
                 </div>
                 <button id="addBtn" type="button" class="btn btn-block">Add VNF</button>

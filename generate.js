@@ -38,7 +38,7 @@ $(document).ready(function(){
         numVnfs = numVnfs + 1;
         var newVnf = '<div class="input-group my-1">' +
             '<select class="form-control vnf-select" id="vnf' + numVnfs + '"><option value="default">default</option></select>' +
-            '<span class="input-group-btn"><button class="btn rem-btn" >-</button></span></div>';
+            '<span class="input-group-btn"><button class="btn rem-btn" >Remove VNF</button></span></div>';
         $("#addBtn").before($(newVnf));
         // add options: all previously uploaded VNFDs
         for (vnf in uploadedVnfs) {

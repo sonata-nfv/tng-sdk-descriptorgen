@@ -12,7 +12,7 @@ describe('tng-sdk-descriptorgen output', function() {
 		expect(element(by.id('info')).getText()).toEqual('Please edit, copy & paste, or download the descriptors below as needed.');
 		var codeBlocks = element.all(by.className('prettyprint lang-yaml'));
 		expect(codeBlocks.first().getAttribute('id')).toEqual('nsdCode');
-		expect(codeBlocks.count()).toEqual(3);		// default: 1 NSD + 2 VNFDs
+		expect(codeBlocks.count()).toEqual(2);		// default: 1 NSD + 1 VNFD
 	});
 	
 	// non-trivial:
