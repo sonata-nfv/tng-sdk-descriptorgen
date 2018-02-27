@@ -1,83 +1,87 @@
-<!-- TODO: check source map error; show result on new html page; adjust generate.js (remove frm1 removal) -->
-
 <!DOCTYPE html>
-<html lang="en"><head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<html lang="en">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <title>5GTANGO Descriptor Generator</title>
+        <title>5GTANGO Descriptor Generator</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="bootstrap/bootstrap.css" rel="stylesheet">
-
-    <!-- Custom styles for this template -->
-    <link href="bootstrap/starter-template.css" rel="stylesheet">
-  </head>
+        <!-- 3rd party CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="prettify/prettify.css">
+        <!--<link rel="stylesheet" href="https://cdn.rawgit.com/enyo/dropzone/e69b9af5/dist/dropzone.css">-->
+    </head>
 
   
-  <body>
-    <main role="main" class="container">
+    <body>
+        <main role="main" class="container">
+            <div class="text-center">
+                <img src="5GTANGO_logo.png" alt="5GTANGO logo" id="logo">
+                <h1>5GTANGO Descriptor Generator</h1>
+                <p id="info" class="lead">Please provide the following information or keep the default values.</p>
+            </div>
 
-		<div class="starter-template">
-			<img src="5GTANGO_logo.png" alt="5GTANGO logo" id="logo">
-			<h1>5GTANGO Descriptor Generator</h1>
-			<p id="info" class="lead">Please provide the following information or keep the default values.</p>
-		</div>
-	  
-		<div id="input" class="form-group">
-			<label for="author">Author name:</label>
-			<input type="text" class="form-control" id="author" value="Tango" required>
-			<label for="vendor">Vendor name:</label>
-			<input type="text" class="form-control" id="vendor" value="Tango" required>
-			<label for="name">Service name:</label>
-			<input type="text" class="form-control" id="name" value="tango-nsd" required>
-			<label for="description">Service description:</label>
-			<input type="text" class="form-control" id="description" value="Default description" required>
-			<label for="vnfs">Number of VNFs:</label>
-			<select class="form-control" id="vnfs">
-				<option value="1">1</option>
-				<option selected value="2">2</option>
-				<option value="3">3</option>
-				<option value="4">4</option>
-				<option value="5">5</option>
-			</select>
-			<label for="vnfType">VNF type:</label>
-			<select class="form-control" id="vnfType">
-				<option value="ubuntu">ubuntu</option>
-			</select>
-		</div>
-		
-		<div class="form-group">
-			<button id="submitBtn" type="submit" class="btn btn-primary btn-block">Generate</button>
-			<button id="newBtn" type="reset" class="btn btn-default btn-block">Generate new</button>
-			<button id="downloadBtn" type="button" class="btn btn-primary btn-block">Download all</button>
-		</div>
-		
-		<div id="descriptors" class="form-group">
-			<h2 id="nsd"></h2>
-			<p id="nsd-code"></p>
-			<h2 id="vnfds"></h2>
-			<p id="vnfd-code"></p>
-		</div>
+            <div id="nsdInput" class="form-group my-5">
+                <label for="author">Author name:</label>
+                <input type="text" class="form-control" id="author" value="Tango" required>
+                <label for="vendor">Vendor name:</label>
+                <input type="text" class="form-control" id="vendor" value="Tango" required>
+                <label for="name">Service name:</label>
+                <input type="text" class="form-control" id="name" value="tango-nsd" required>
+                <label for="description">Service description:</label>
+                <input type="text" class="form-control" id="description" value="Default description" required>
+            </div>
 
-    </main><!-- /.container -->
-	
+            <div id="vnfdInput" class="form-group my-5">
+                <!--TODO: cooler upload with drag and drop-->
+                <!--<form action="/file-upload" class="dropzone" id="my-awesome-dropzone"></form>-->
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="bootstrap/jquery-3.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script>window.jQuery || document.write('<script src="../../../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
-    <script src="bootstrap/popper.js"></script>
-    <script src="bootstrap/bootstrap.js"></script>
-  
+                <label for="vnfd_upload">VNFD upload</label>
+                <input type="file" class="form-control-file" id="vnfd_upload" aria-describedby="fileHelp" onchange="uploadVnfd();">
+                <small id="fileHelp" class="form-text text-muted mb-2">To reuse existing VNFs in the network service, upload their descriptors (VNFDs).</small>
 
-	<!-- Generation script and dependencies -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script src="https://cdn.rawgit.com/nodeca/js-yaml/bee7e998/dist/js-yaml.min.js"></script>
-	<script src="jszip/jszip.js"></script>
-	<link rel="stylesheet" type="text/css" href="prettify/prettify.css">
-	<script type="text/javascript" src="prettify/prettify.js"></script>
-	<script src="generate.js"></script>
-</body></html>
+                <label id="vnfsLabel" for="vnfGroup1">VNFs</label>
+                <div class="input-group my-1" id="vnfGroup1">
+                    <select class="form-control vnf-select" id="vnf1">
+                        <option value="default">default</option>
+                    </select>
+                    <span class="input-group-btn">
+                        <button class="btn rem-btn" type="button">Remove VNF</button>
+                    </span>
+                </div>
+                <button id="addBtn" type="button" class="btn btn-block">Add VNF</button>
+            </div>
+
+            <div class="form-group">
+                <button id="submitBtn" type="submit" class="btn btn-primary btn-block">Generate</button>
+                <button id="newBtn" type="reset" class="btn btn-default btn-block">Generate new</button>
+                <button id="downloadBtn" type="button" class="btn btn-primary btn-block">Download all</button>
+            </div>
+
+            <div id="descriptors" class="form-group">
+                <h2 id="nsd"></h2>
+                <p id="nsd-code"></p>
+                <h2 id="vnfds"></h2>
+                <p id="vnfd-code"></p>
+            </div>
+
+        </main><!-- /.container -->
+
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+        <!-- Generation script and dependencies -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="https://cdn.rawgit.com/nodeca/js-yaml/bee7e998/dist/js-yaml.min.js"></script>
+        <script src="jszip/jszip.js"></script>
+        <script type="text/javascript" src="prettify/prettify.js"></script>
+        <!--<script src="https://cdn.rawgit.com/enyo/dropzone/e69b9af5/dist/dropzone.js"></script>-->
+        <script src="generate.js"></script>
+    </body>
+</html>

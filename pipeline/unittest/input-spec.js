@@ -4,8 +4,9 @@ describe('tng-sdk-descriptorgen input', function() {
 	var vendor = element(by.id('vendor'));
 	var name = element(by.id('name'));
 	var description = element(by.id('description'));
-	var vnfs = element(by.id('vnfs'));
-	var vnfType = element(by.id('vnfType'));
+	var vnfUpload = element(by.id('vnfd_upload'));
+	var vnf1 = element(by.id('vnf1'));
+	var addBtn = element(by.id('addBtn'));
 	
 
 	beforeEach(function() {
@@ -15,11 +16,13 @@ describe('tng-sdk-descriptorgen input', function() {
 	
 	it('should show the logo, input form, and generate button', function() {
 		expect(element(by.id('logo')).isDisplayed()).toBeTruthy();
-		expect(element(by.id('input')).isDisplayed()).toBeTruthy();
+		expect(element(by.id('nsdInput')).isDisplayed()).toBeTruthy();
+        expect(element(by.id('vnfdInput')).isDisplayed()).toBeTruthy();
+        expect(addBtn.isDisplayed()).toBeTruthy();
 		expect(submitBtn.isDisplayed()).toBeTruthy();
 	});
 	
-	it('should not show new or button button', function() {
+	it('should not show new or download button', function() {
 		expect(element(by.id('newBtn')).isDisplayed()).toBeFalsy();
 		expect(element(by.id('downloadBtn')).isDisplayed()).toBeFalsy();
 	});
@@ -29,8 +32,7 @@ describe('tng-sdk-descriptorgen input', function() {
 		expect(vendor.getAttribute('value')).toEqual('Tango');
 		expect(name.getAttribute('value')).toEqual('tango-nsd');
 		expect(description.getAttribute('value')).toEqual('Default description');
-		expect(vnfs.getAttribute('value')).toEqual('2');
-		expect(vnfType.getAttribute('value')).toEqual('ubuntu');
+		expect(vnf1.getAttribute('value')).toEqual('default');
 	});
 	
 	it('should allow editing the default inputs', function() {
@@ -42,8 +44,8 @@ describe('tng-sdk-descriptorgen input', function() {
 		expect(name.getAttribute('value')).toEqual('Test name');
 		description.clear().sendKeys('Test description');
 		expect(description.getAttribute('value')).toEqual('Test description');
-		vnfs.sendKeys(3);
-		expect(vnfs.getAttribute('value')).toEqual('3');		
+		addBtn.click();
+		expect(element(by.id('vnf2')).isDisplayed()).toBeTruthy();
 	});
 });
 

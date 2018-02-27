@@ -1,0 +1,1 @@
+Example VNFD files taken from [tng-schema](https://github.com/sonata-nfv/tng-schema).

@@ -23,14 +23,38 @@ partner consortium (www.5gtango.eu). */
 
 var defaultVnfd;
 var defaultNsd;
+var uploadedVnfs = {};
 
 // button click
-$('#submitBtn').on('click', loadDescriptors);
-$('#newBtn').on('click', refresh);
-$('#downloadBtn').on('click', downloadAll);
+$('#submitBtn').click(loadDescriptors);
+$('#newBtn').click(refresh);
+$('#downloadBtn').click(downloadAll);
+
+// dynamic form fields for adding/removing VNFs
+$(document).ready(function(){
+    var numVnfs = 1;
+    // add VNF
+    $("#addBtn").click(function(e){
+        numVnfs = numVnfs + 1;
+        var newVnf = '<div class="input-group my-1">' +
+            '<select class="form-control vnf-select" id="vnf' + numVnfs + '"><option value="default">default</option></select>' +
+            '<span class="input-group-btn"><button class="btn rem-btn" >Remove VNF</button></span></div>';
+        $("#addBtn").before($(newVnf));
+        // add options: all previously uploaded VNFDs
+        for (vnf in uploadedVnfs) {
+            $('#vnf' + numVnfs).append($('<option>', {value: vnf, text: vnf}));
+        }
+
+        // remove VNF
+        $('.rem-btn').click(function(e){
+            var vnfGroup = this.parentNode.parentNode;
+            $(vnfGroup).remove();
+        });
+    });
+});
 
 // submit when pressing enter
-document.getElementById('input').onkeydown = function(e) {
+document.getElementById('nsdInput').onkeydown = function(e) {
 	if (e.keyCode == 13) {
 		loadDescriptors();
 	}
@@ -40,7 +64,7 @@ document.getElementById('input').onkeydown = function(e) {
 window.onload = function() {
 	document.getElementById('newBtn').style.display = 'none';
 	document.getElementById('downloadBtn').style.display = 'none';
-}
+};
 
 // reload window to allow creating new descriptors
 function refresh() {
@@ -54,7 +78,8 @@ function loadDescriptors() {
 	var nsdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-schema/4ea30d03/service-descriptor/examples/default-nsd.yml";
 	
 	// hide the generate button and input and show the generate new and download buttons
-	document.getElementById('input').style.display = 'none';
+	document.getElementById('nsdInput').style.display = 'none';
+    document.getElementById('vnfdInput').style.display = 'none';
 	document.getElementById('submitBtn').style.display = 'none';
 	document.getElementById('newBtn').style.display = 'block';
 	document.getElementById('downloadBtn').style.display = 'block';
@@ -81,16 +106,24 @@ function setNsd(data) {
 
 
 // use provided information to copy and edit the default descriptors
-function editDescriptors() {	
-	// copy and edit VNFDs
+function editDescriptors() {
+	// copy and edit VNFDs (don't edit uploaded VNFDs)
 	var vnfds = [];
 	defaultVnfd.author = document.getElementById('author').value;
 	defaultVnfd.vendor = document.getElementById('vendor').value;
-	var numVnfs = Number(document.getElementById('vnfs').value);
-	for (i=0; i<numVnfs; i++) {
-		vnfds[i] = Object.assign({}, defaultVnfd);		// shallow copy defaultVnfd (enough since VNFDs aren't nested)
-		vnfds[i].name = "ubuntu-vnf" + i;
-	}	
+    var numVnfs = 0;
+    var numDefaultVnfs = 0;
+	$('.vnf-select').each(function(i, obj) {
+        if (obj.value == "default") {
+            vnfds.push(Object.assign({}, defaultVnfd));     // shallow copy defaultVnfd (enough since VNFDs aren't nested)
+            vnfds[i].name = "default-vnf" + numDefaultVnfs;
+            numDefaultVnfs += 1;
+        }
+        else {
+            vnfds.push(uploadedVnfs[obj.value]);
+        }
+        numVnfs += 1;
+    });
 	
 	// copy and edit NSD: general info and involved vnfs
 	var nsd = defaultNsd;		// since there's only one NSD, no proper copy needed
@@ -191,12 +224,12 @@ function addCode(name, descriptor, parentNode) {
 function addDownloadButton(name, descriptor, parentNode) {
 	var downloadBtn = document.createElement('button');
 	downloadBtn.id = name.toLowerCase() + "DownloadBtn";
-	downloadBtn.className = "btn btn-primary btn-block";
+	downloadBtn.className = "btn btn-primary btn-block mb-5";
 	downloadBtn.type = "button";
 	downloadBtn.innerHTML = "Download " + name.toUpperCase();
 	downloadBtn.addEventListener('click', function() {
 		// load current descriptor from code box to cover manual changes
-		currDescriptor = document.getElementById(name + "Code").innerText;
+		var currDescriptor = document.getElementById(name + "Code").innerText;
 		download(currDescriptor, name.toLowerCase() + ".yaml");
 	});
 	parentNode.appendChild(downloadBtn);
@@ -224,11 +257,11 @@ function downloadAll() {
 	var zip = JSZip();
 	
 	// retrieve current descriptors to cover possible manual changes
-	divNode = document.getElementById('descriptors');
+	var divNode = document.getElementById('descriptors');
 	var children = divNode.getElementsByTagName('pre');
 	for (i = 0; i < children.length; i++) {
-		code = children[i].innerText;
-		yaml = jsyaml.load(code);
+		var code = children[i].innerText;
+		var yaml = jsyaml.load(code);
 		zip.file(yaml.name + ".yaml", code);
 	}
 	
@@ -236,4 +269,33 @@ function downloadAll() {
 		download(content, "descriptors.zip", "blob");
 	});
 }
-	
+
+
+// upload an existing VNFD to reuse in the network service
+function uploadVnfd() {
+    var file = document.getElementById("vnfd_upload").files[0];     // only the first file
+
+    if (file) {
+        var reader = new FileReader();
+        reader.readAsText(file);
+        reader.onload = function(evt) {
+            var contents = evt.target.result;
+            var vnfd = jsyaml.load(contents);
+
+            // validate: correct vnfd with 3 connection points: input, output, mgmt
+            if (!(vnfd.connection_points.some(e => e.id === "mgmt") && vnfd.connection_points.some(e => e.id === "input")
+                && vnfd.connection_points.some(e => e.id === "output"))) {
+                alert("Invalid VNFD: Does not contain mgmt, input, output connection points")
+                return;
+            }
+
+            // add new VNFD as option
+            uploadedVnfs[vnfd.name] = vnfd;
+            $(".vnf-select").append($('<option>', {value: vnfd.name, text: vnfd.name}));
+
+            // show success
+            document.getElementById("fileHelp").innerText = "Uploaded " + file.name + " successfully."
+        };
+        reader.onerror = function(evt) {alert("Error: Could not read file.")}
+    }
+}
