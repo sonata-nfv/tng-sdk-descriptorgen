@@ -23,6 +23,7 @@ partner consortium (www.5gtango.eu). */
 
 var defaultVnfd;
 var defaultNsd;
+var uploadedVnfs = [];
 
 // button click
 $('#submitBtn').on('click', loadDescriptors);
@@ -33,12 +34,14 @@ $('#downloadBtn').on('click', downloadAll);
 $(document).ready(function(){
     var numVnfs = 1;
     $("#addBtn").click(function(e){
-        var prevVnf = "#vnfGroup" + numVnfs;
         numVnfs = numVnfs + 1;
-        var newVnf = '<div class="input-group my-1" id="vnfGroup' + numVnfs + '">' +
-            '<select class="form-control" id="vnf' + numVnfs + '"><option value="ubuntu">ubuntu</option></select>' +
+        var newVnf = '<div class="input-group my-1">' +
+            '<select class="form-control vnf-select" id="vnf' + numVnfs + '"><option value="ubuntu">ubuntu</option></select>' +
             '<span class="input-group-btn"><button class="btn rem-btn" >-</button></span></div>';
-        $(prevVnf).after($(newVnf));
+        $.each(uploadedVnfs, function (i, item) {
+            $('#vnf' + numVnfs).append($('<option>', {value: item.name, text: item.name}));
+        });
+        $("#addBtn").before($(newVnf));
 
         $('.rem-btn').click(function(e){
             var vnfGroup = this.parentNode.parentNode;
@@ -64,9 +67,6 @@ window.onload = function() {
 function refresh() {
 	location.reload();
 }
-
-
-// TODO: change number of VNFs: Add/remove corresponding fields
 
 
 // load default VNFD and NSD from GitHub (asynchronous -> set VNFD, NSD and ask for user input when ready)
@@ -260,9 +260,9 @@ function downloadAll() {
 }
 
 
-// upload and read an existing VNFD
-function readFile() {
-    var file = document.getElementById("vnfd_upload").files[0];     // only the first file
+// upload an existing VNFD to reuse in the network service
+function uploadVnfd() {
+    var file = document.getElementById("vnfd_upload").files[0];     // only the first file TODO: multiple
 
     if (file) {
         var reader = new FileReader();
@@ -272,10 +272,8 @@ function readFile() {
             var vnfd = jsyaml.load(contents);
 
             // add new VNFD as option
-            var vnfTypes = document.getElementById("vnfType");
-            var option = document.createElement("option");
-            option.text = vnfd.name;
-            vnfTypes.add(option);
+            uploadedVnfs.push(vnfd);
+            $(".vnf-select").append($('<option>', {value: vnfd.name, text: vnfd.name}));
 
             // show success
             document.getElementById("fileHelp").innerText = "Uploaded " + file.name + " successfully."
