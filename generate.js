@@ -272,7 +272,6 @@ function downloadAll() {
 
 
 // upload an existing VNFD to reuse in the network service
-// TODO: check descriptor and connection points (must be input, output, mgmt)
 function uploadVnfd() {
     var file = document.getElementById("vnfd_upload").files[0];     // only the first file TODO: multiple
 
@@ -282,6 +281,13 @@ function uploadVnfd() {
         reader.onload = function(evt) {
             var contents = evt.target.result;
             var vnfd = jsyaml.load(contents);
+
+            // validate: correct vnfd with 3 connection points: input, output, mgmt
+            if (!(vnfd.connection_points.some(e => e.id === "mgmt") && vnfd.connection_points.some(e => e.id === "input")
+                && vnfd.connection_points.some(e => e.id === "output"))) {
+                alert("Invalid VNFD: Does not contain mgmt, input, output connection points")
+                return;
+            }
 
             // add new VNFD as option
             uploadedVnfs[vnfd.name] = vnfd;
