@@ -29,6 +29,24 @@ $('#submitBtn').on('click', loadDescriptors);
 $('#newBtn').on('click', refresh);
 $('#downloadBtn').on('click', downloadAll);
 
+// dynamic form fields for adding/removing VNFs
+$(document).ready(function(){
+    var numVnfs = 1;
+    $("#addBtn").click(function(e){
+        var prevVnf = "#vnfGroup" + numVnfs;
+        numVnfs = numVnfs + 1;
+        var newVnf = '<div class="input-group my-1" id="vnfGroup' + numVnfs + '">' +
+            '<select class="form-control" id="vnf' + numVnfs + '"><option value="ubuntu">ubuntu</option></select>' +
+            '<span class="input-group-btn"><button class="btn rem-btn" >-</button></span></div>';
+        $(prevVnf).after($(newVnf));
+
+        $('.rem-btn').click(function(e){
+            var vnfGroup = this.parentNode.parentNode;
+            $(vnfGroup).remove();
+        });
+    });
+});
+
 // submit when pressing enter
 document.getElementById('nsdInput').onkeydown = function(e) {
 	if (e.keyCode == 13) {
