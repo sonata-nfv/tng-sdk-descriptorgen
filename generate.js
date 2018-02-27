@@ -23,7 +23,7 @@ partner consortium (www.5gtango.eu). */
 
 var defaultVnfd;
 var defaultNsd;
-var uploadedVnfs = [];
+var uploadedVnfs = {};
 
 // button click
 $('#submitBtn').click(loadDescriptors);
@@ -41,9 +41,8 @@ $(document).ready(function(){
             '<span class="input-group-btn"><button class="btn rem-btn" >-</button></span></div>';
         $("#addBtn").before($(newVnf));
         // add options: all previously uploaded VNFDs
-        for (i=0; i<uploadedVnfs.length; i++) {
-            console.log(uploadedVnfs[i].name);
-            $('#vnf' + numVnfs).append($('<option>', {value: uploadedVnfs[i].name, text: uploadedVnfs[i].name}));
+        for (vnf in uploadedVnfs) {
+            $('#vnf' + numVnfs).append($('<option>', {value: vnf, text: vnf}));
         }
 
         // remove VNF
@@ -108,20 +107,29 @@ function setNsd(data) {
 
 // use provided information to copy and edit the default descriptors
 function editDescriptors() {
-    // TODO: retrieve corresponding vnfds and use in nsd
-    $('.vnf-select').each(function(i, obj) {
-        console.log(obj.innerText);
-    });
-
-	// copy and edit VNFDs
+	// copy and edit VNFDs (don't edit uploaded VNFDs)
 	var vnfds = [];
 	defaultVnfd.author = document.getElementById('author').value;
 	defaultVnfd.vendor = document.getElementById('vendor').value;
-	var numVnfs = Number(document.getElementById('vnfs').value);
-	for (i=0; i<numVnfs; i++) {
-		vnfds[i] = Object.assign({}, defaultVnfd);		// shallow copy defaultVnfd (enough since VNFDs aren't nested)
-		vnfds[i].name = "default-vnf" + i;
-	}	
+	// var numVnfs = Number(document.getElementById('vnfs').value);
+    var numVnfs = 0;
+    var numDefaultVnfs = 0;
+	$('.vnf-select').each(function(i, obj) {
+        if (obj.value == "default") {
+            vnfds.push(Object.assign({}, defaultVnfd));     // shallow copy defaultVnfd (enough since VNFDs aren't nested)
+            vnfds[i].name = "default-vnf" + numDefaultVnfs;
+            numDefaultVnfs += 1;
+        }
+        else {
+            vnfds.push(uploadedVnfs[obj.value]);
+        }
+        numVnfs += 1;
+    });
+
+	// for (i=0; i<numVnfs; i++) {
+	// 	vnfds[i] = Object.assign({}, defaultVnfd);		// shallow copy defaultVnfd (enough since VNFDs aren't nested)
+	// 	vnfds[i].name = "default-vnf" + i;
+	// }
 	
 	// copy and edit NSD: general info and involved vnfs
 	var nsd = defaultNsd;		// since there's only one NSD, no proper copy needed
@@ -222,7 +230,7 @@ function addCode(name, descriptor, parentNode) {
 function addDownloadButton(name, descriptor, parentNode) {
 	var downloadBtn = document.createElement('button');
 	downloadBtn.id = name.toLowerCase() + "DownloadBtn";
-	downloadBtn.className = "btn btn-primary btn-block";
+	downloadBtn.className = "btn btn-primary btn-block mb-5";
 	downloadBtn.type = "button";
 	downloadBtn.innerHTML = "Download " + name.toUpperCase();
 	downloadBtn.addEventListener('click', function() {
@@ -270,6 +278,7 @@ function downloadAll() {
 
 
 // upload an existing VNFD to reuse in the network service
+// TODO: check descriptor and connection points (must be input, output, mgmt)
 function uploadVnfd() {
     var file = document.getElementById("vnfd_upload").files[0];     // only the first file TODO: multiple
 
@@ -281,7 +290,7 @@ function uploadVnfd() {
             var vnfd = jsyaml.load(contents);
 
             // add new VNFD as option
-            uploadedVnfs.push(vnfd);
+            uploadedVnfs[vnfd.name] = vnfd;
             $(".vnf-select").append($('<option>', {value: vnfd.name, text: vnfd.name}));
 
             // show success

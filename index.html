@@ -35,18 +35,7 @@
             </div>
 
             <div id="vnfdInput" class="form-group my-5">
-                <label for="vnfs">Number of VNFs:</label>
-                <select class="form-control" id="vnfs">
-                    <option value="1">1</option>
-                    <option selected value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-                <label for="vnfType">VNF type:</label>
-                <select class="form-control" id="vnfType">
-                    <option value="default">default</option>
-                </select>
+                <!--TODO: cooler upload with drag and drop-->
                 <label for="vnfd_upload">VNFD upload</label>
                 <input type="file" class="form-control-file" id="vnfd_upload" aria-describedby="fileHelp" onchange="uploadVnfd();">
                 <small id="fileHelp" class="form-text text-muted">To reuse existing VNFs in the network service, upload their descriptors (VNFDs).</small>
@@ -79,7 +68,6 @@
         </main><!-- /.container -->
 
 
-        <!--TODO: download bootstrap and use locally if TLS handshake takes too long-->
         <!-- Optional JavaScript -->
         <!-- jQuery first, then Popper.js, then Bootstrap JS -->
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
