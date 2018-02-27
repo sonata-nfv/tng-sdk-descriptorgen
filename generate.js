@@ -111,7 +111,6 @@ function editDescriptors() {
 	var vnfds = [];
 	defaultVnfd.author = document.getElementById('author').value;
 	defaultVnfd.vendor = document.getElementById('vendor').value;
-	// var numVnfs = Number(document.getElementById('vnfs').value);
     var numVnfs = 0;
     var numDefaultVnfs = 0;
 	$('.vnf-select').each(function(i, obj) {
@@ -125,11 +124,6 @@ function editDescriptors() {
         }
         numVnfs += 1;
     });
-
-	// for (i=0; i<numVnfs; i++) {
-	// 	vnfds[i] = Object.assign({}, defaultVnfd);		// shallow copy defaultVnfd (enough since VNFDs aren't nested)
-	// 	vnfds[i].name = "default-vnf" + i;
-	// }
 	
 	// copy and edit NSD: general info and involved vnfs
 	var nsd = defaultNsd;		// since there's only one NSD, no proper copy needed
