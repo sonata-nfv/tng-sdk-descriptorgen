@@ -273,7 +273,7 @@ function downloadAll() {
 
 // upload an existing VNFD to reuse in the network service
 function uploadVnfd() {
-    var file = document.getElementById("vnfd_upload").files[0];     // only the first file TODO: multiple
+    var file = document.getElementById("vnfd_upload").files[0];     // only the first file
 
     if (file) {
         var reader = new FileReader();
