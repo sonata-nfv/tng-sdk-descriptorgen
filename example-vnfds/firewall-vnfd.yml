@@ -1,4 +1,5 @@
-# Example VNFD of a firewall docker container
+# YAML description of a firewall docker container
+# used in the SONATA platform
 
 ---
 ##
