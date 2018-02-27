@@ -45,16 +45,16 @@
                 </select>
                 <label for="vnfType">VNF type:</label>
                 <select class="form-control" id="vnfType">
-                    <option value="ubuntu">ubuntu</option>
+                    <option value="default">default</option>
                 </select>
                 <label for="vnfd_upload">VNFD upload</label>
                 <input type="file" class="form-control-file" id="vnfd_upload" aria-describedby="fileHelp" onchange="uploadVnfd();">
-                <small id="fileHelp" class="form-text text-muted">To reuse existing VNFs in the network service, upload their descriptors.</small>
+                <small id="fileHelp" class="form-text text-muted">To reuse existing VNFs in the network service, upload their descriptors (VNFDs).</small>
 
                 <label id="vnfsLabel" for="vnfGroup1">VNFs</label>
                 <div class="input-group my-1" id="vnfGroup1">
                     <select class="form-control vnf-select" id="vnf1">
-                        <option value="ubuntu">ubuntu</option>
+                        <option value="default">default</option>
                     </select>
                     <span class="input-group-btn">
                         <button class="btn rem-btn" type="button">-</button>

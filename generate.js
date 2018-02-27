@@ -26,23 +26,27 @@ var defaultNsd;
 var uploadedVnfs = [];
 
 // button click
-$('#submitBtn').on('click', loadDescriptors);
-$('#newBtn').on('click', refresh);
-$('#downloadBtn').on('click', downloadAll);
+$('#submitBtn').click(loadDescriptors);
+$('#newBtn').click(refresh);
+$('#downloadBtn').click(downloadAll);
 
 // dynamic form fields for adding/removing VNFs
 $(document).ready(function(){
     var numVnfs = 1;
+    // add VNF
     $("#addBtn").click(function(e){
         numVnfs = numVnfs + 1;
         var newVnf = '<div class="input-group my-1">' +
-            '<select class="form-control vnf-select" id="vnf' + numVnfs + '"><option value="ubuntu">ubuntu</option></select>' +
+            '<select class="form-control vnf-select" id="vnf' + numVnfs + '"><option value="default">default</option></select>' +
             '<span class="input-group-btn"><button class="btn rem-btn" >-</button></span></div>';
-        $.each(uploadedVnfs, function (i, item) {
-            $('#vnf' + numVnfs).append($('<option>', {value: item.name, text: item.name}));
-        });
         $("#addBtn").before($(newVnf));
+        // add options: all previously uploaded VNFDs
+        for (i=0; i<uploadedVnfs.length; i++) {
+            console.log(uploadedVnfs[i].name);
+            $('#vnf' + numVnfs).append($('<option>', {value: uploadedVnfs[i].name, text: uploadedVnfs[i].name}));
+        }
 
+        // remove VNF
         $('.rem-btn').click(function(e){
             var vnfGroup = this.parentNode.parentNode;
             $(vnfGroup).remove();
@@ -103,7 +107,12 @@ function setNsd(data) {
 
 
 // use provided information to copy and edit the default descriptors
-function editDescriptors() {	
+function editDescriptors() {
+    // TODO: retrieve corresponding vnfds and use in nsd
+    $('.vnf-select').each(function(i, obj) {
+        console.log(obj.innerText);
+    });
+
 	// copy and edit VNFDs
 	var vnfds = [];
 	defaultVnfd.author = document.getElementById('author').value;
@@ -111,7 +120,7 @@ function editDescriptors() {
 	var numVnfs = Number(document.getElementById('vnfs').value);
 	for (i=0; i<numVnfs; i++) {
 		vnfds[i] = Object.assign({}, defaultVnfd);		// shallow copy defaultVnfd (enough since VNFDs aren't nested)
-		vnfds[i].name = "ubuntu-vnf" + i;
+		vnfds[i].name = "default-vnf" + i;
 	}	
 	
 	// copy and edit NSD: general info and involved vnfs
