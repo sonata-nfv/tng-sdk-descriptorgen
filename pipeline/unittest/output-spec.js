@@ -3,7 +3,7 @@ describe('tng-sdk-descriptorgen output', function() {
 		// wait 2s for descriptors to generate and load
 		browser.get('');
 		element(by.id('submitBtn')).click();
-		browser.driver.sleep(2000);
+		browser.driver.sleep(3000);
 	});
 
 	
