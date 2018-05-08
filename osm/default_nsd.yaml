@@ -18,4 +18,6 @@ nsd-catalog:
       mgmt-network: true
       vnfd-connection-point-ref:
       - member-vnf-index-ref: 1
-      # TODO: continue here
+        vnfd-connection-point-ref: mgmt
+        vnfd-id-ref: default-vnfd
+    # TODO: how to connect external inputs, outputs to the NS?
