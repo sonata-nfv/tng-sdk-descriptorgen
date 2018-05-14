@@ -13,9 +13,10 @@ Simply download the repository and open `index.html` in a web browser (tested wi
 If you want to deploy the descriptor generator as a docker container, you can do so using the `Dockerfile`. The container will run a nginx webserver serving the descriptor generator. Simply download the repository and run from within:
 * `docker build -f Dockerfile -t tng-sdk-descriptorgen:latest .` to create the docker image
 * `docker images` to check that the image is there
-* `docker run -d -p 80:80 tng-sdk-descriptorgen:latest` to start the docker container
+* `docker run -d -p 80:80 --name descriptorgen --rm tng-sdk-descriptorgen:latest` to start the docker container
 * `docker container ls` to check that the container is running
 * Open localhost in your web browser to access the descriptor generation web interface
+* `docker stop descriptorgen` to stop the container
 
 `DockerfilePipeline` is just used for the Jenkins pipeline.
 
