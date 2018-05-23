@@ -23,15 +23,15 @@ partner consortium (www.5gtango.eu). */
 
 // use provided information to copy and generate descriptors based on the default descriptors
 function genTangoDescriptors(defaultNsd, defaultVnfd, uploadedVnfs) {
-    vnfds = generateVnfds(defaultVnfd, uploadedVnfs);
-    nsd = generateNsd(defaultNsd, vnfds);
+    vnfds = generateTangoVnfds(defaultVnfd, uploadedVnfs);
+    nsd = generateTangoNsd(defaultNsd, vnfds);
 
     return [nsd, vnfds];
 }
 
 
 // generate VNFDs by copying and editing the default VNFD (not for uploaded VNFDs)
-function generateVnfds(defaultVnfd, uploadedVnfs) {
+function generateTangoVnfds(defaultVnfd, uploadedVnfs) {
     var vnfds = [];
     defaultVnfd.author = document.getElementById('author').value;
     defaultVnfd.vendor = document.getElementById('vendor').value;
@@ -55,7 +55,7 @@ function generateVnfds(defaultVnfd, uploadedVnfs) {
 }
 
 
-function generateNsd(defaultNsd, vnfds) {
+function generateTangoNsd(defaultNsd, vnfds) {
     // copy and edit NSD: general info and involved vnfs
     var nsd = defaultNsd;		// since there's only one NSD, no proper copy needed
     nsd.author = document.getElementById('author').value;

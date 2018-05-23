@@ -109,34 +109,30 @@ function loadDescriptors() {
 	document.getElementById('downloadBtn').style.display = 'block';
 
     // load descriptors; only cache default descriptors in production, not in development
-	$.ajax({url: tangoVnfdUrl, success: setVnfd, cache: productionMode});
-	$.ajax({url: tangoNsdUrl, success: setNsd, cache: productionMode});
+	var loadTangoVnfd = $.ajax({url: tangoVnfdUrl, cache: productionMode});
+	var loadTangoNsd = $.ajax({url: tangoNsdUrl, cache: productionMode});
+    var loadOsmVnfd = $.ajax({url: osmVnfdUrl, cache: productionMode});
+    var loadOsmNsd = $.ajax({url: osmNsdUrl, cache: productionMode});
+    $.when(loadTangoVnfd, loadTangoNsd, loadOsmVnfd, loadOsmNsd).then(generateDescriptors);
 	
 	return false;
 }
 
-function setVnfd(data) {
-	defaultTangoVnfd = jsyaml.load(data);
-
-	if (typeof defaultTangoNsd != 'undefined')
-		generateDescriptors();
-}
-
-function setNsd(data) {
-	defaultTangoNsd = jsyaml.load(data);
-	
-	if (typeof defaultTangoVnfd != 'undefined')
-		generateDescriptors();
-}
-
 
 // trigger generation of Tango and OSM descriptors
-function generateDescriptors() {
-    var descriptors = genTangoDescriptors(defaultTangoNsd, defaultTangoVnfd, uploadedVnfs);
-    // TODO: generate OSM descriptors
+function generateDescriptors(data1, data2, data3, data4) {
+    // get the returned default
+    defaultTangoVnfd = jsyaml.safeLoad(data1[0]);
+    defaultTangoNsd = jsyaml.safeLoad(data2[0]);
+    defaultOsmVnfd = jsyaml.safeLoad(data3[0]);
+    defaultOsmNsd = jsyaml.safeLoad(data4[0]);
+
+    //var descriptors = genTangoDescriptors(defaultTangoNsd, defaultTangoVnfd, uploadedVnfs);
+    var descriptors = genOsmDescriptors(defaultOsmNsd, defaultOsmVnfd, uploadedVnfs);
 
     var nsd = descriptors[0];
     var vnfds = descriptors[1];
+
     showDescriptors(nsd, vnfds);
 }
 
