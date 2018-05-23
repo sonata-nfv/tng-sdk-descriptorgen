@@ -5,18 +5,22 @@ The resulting VNFDs and NSDs can still be modified as needed.
 
 ## Installation and usage
 
-Simply download the repository and open `index.html` in a web browser (tested with Firefox 58).
+Options:
+
+* Download the repository and open `index.html` in a web browser to use it locally (tested with Firefox 58)
+* Download the repository and deploy the Descriptor Generator as a Docker container (see below)
+* Simply go to tango-sdk-sandbox.cs.upb.de (or soon sdk.5gtango.eu) to access the tool directly (running as Docker on a VM)
 
 
 ## Docker deployment
 
 If you want to deploy the descriptor generator as a docker container, you can do so using the `Dockerfile`. The container will run a nginx webserver serving the descriptor generator. Simply download the repository and run from within:
-* `docker build -f Dockerfile -t tng-sdk-descriptorgen:latest .` to create the docker image
-* `docker images` to check that the image is there
-* `docker run -d -p 80:80 --name descriptorgen --rm tng-sdk-descriptorgen:latest` to start the docker container
-* `docker container ls` to check that the container is running
+* `sudo docker build -f Dockerfile -t tng-sdk-descriptorgen:latest .` to create the docker image
+* `sudo docker images` to check that the image is there
+* `sudo docker run -d -p 80:80 --name descriptorgen --rm tng-sdk-descriptorgen:latest` to start the docker container
+* `sudo docker container ls` to check that the container is running
 * Open localhost in your web browser to access the descriptor generation web interface
-* `docker stop descriptorgen` to stop the container
+* `sudo docker stop descriptorgen` to stop the container
 
 `DockerfilePipeline` is just used for the Jenkins pipeline.
 

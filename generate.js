@@ -21,8 +21,12 @@ acknowledge the contributions of their colleagues of the 5GTANGO
 partner consortium (www.5gtango.eu). */
 
 
-var defaultVnfd;
-var defaultNsd;
+// global variables
+var defaultTangoVnfd;
+var defaultTangoNsd;
+var productionMode = true;     // productionMode = true --> load default descriptors faster (default!); = false --> reflect changed descriptors within minutes
+var defaultOsmVnfd;
+var defaultOsmNsd;
 var uploadedVnfs = {};
 
 // button click
@@ -74,8 +78,23 @@ function refresh() {
 
 // load default VNFD and NSD from GitHub (asynchronous -> set VNFD, NSD and ask for user input when ready)
 function loadDescriptors() {
-	var vnfdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-schema/4ea30d03/function-descriptor/examples/default-vnfd.yml";
-	var nsdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-schema/4ea30d03/service-descriptor/examples/default-nsd.yml";
+	if (productionMode) {
+        // load most recent 5GTANGO default descriptors from the tng-schema repository using RawGit production CDN
+        var tangoVnfdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-schema/4ea30d03/function-descriptor/examples/default-vnfd.yml";
+        var tangoNsdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-schema/4ea30d03/service-descriptor/examples/default-nsd.yml";
+
+        //TODO: OSM production CDN
+        // var osmVnfdUrl =
+    }
+    else {
+        // or load them from StefanUPB/tng-sdk-descriptorgen fork using RawGit development CDN (only for development, testing)
+        console.log("productionMode off: Load default descr. from StefanUPB/tng-sdk-descriptorgen + no caching");
+        var tangoVnfdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/master/default-descriptors/tango_default_vnfd.yml";
+        var tangoNsdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/master/default-descriptors/tango_default_nsd.yml";
+
+        var osmVnfdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/master/default-descriptors/osm_default_vnfd.yaml";
+        var osmNsdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/master/default-descriptors/osm_default_nsd.yaml";
+    }
 	
 	// hide the generate button and input and show the generate new and download buttons
 	document.getElementById('nsdInput').style.display = 'none';
@@ -83,100 +102,37 @@ function loadDescriptors() {
 	document.getElementById('submitBtn').style.display = 'none';
 	document.getElementById('newBtn').style.display = 'block';
 	document.getElementById('downloadBtn').style.display = 'block';
-	
-	$.get(vnfdUrl, setVnfd);
-	$.get(nsdUrl, setNsd);
+
+    // load descriptors; only cache default descriptors in production, not in development
+	$.ajax({url: tangoVnfdUrl, success: setVnfd, cache: productionMode});
+	$.ajax({url: tangoNsdUrl, success: setNsd, cache: productionMode});
 	
 	return false;
 }
 
 function setVnfd(data) {
-	defaultVnfd = jsyaml.load(data);
-	
-	if (typeof defaultNsd != 'undefined')
-		editDescriptors();
+	defaultTangoVnfd = jsyaml.load(data);
+
+	if (typeof defaultTangoNsd != 'undefined')
+		generateDescriptors();
 }
 
 function setNsd(data) {
-	defaultNsd = jsyaml.load(data);
+	defaultTangoNsd = jsyaml.load(data);
 	
-	if (typeof defaultVnfd != 'undefined')
-		editDescriptors();
+	if (typeof defaultTangoVnfd != 'undefined')
+		generateDescriptors();
 }
 
 
-// use provided information to copy and edit the default descriptors
-function editDescriptors() {
-	// copy and edit VNFDs (don't edit uploaded VNFDs)
-	var vnfds = [];
-	defaultVnfd.author = document.getElementById('author').value;
-	defaultVnfd.vendor = document.getElementById('vendor').value;
-    var numVnfs = 0;
-    var numDefaultVnfs = 0;
-	$('.vnf-select').each(function(i, obj) {
-        if (obj.value == "default") {
-            vnfds.push(Object.assign({}, defaultVnfd));     // shallow copy defaultVnfd (enough since VNFDs aren't nested)
-            vnfds[i].name = "default-vnf" + numDefaultVnfs;
-            numDefaultVnfs += 1;
-        }
-        else {
-            vnfds.push(uploadedVnfs[obj.value]);
-        }
-        numVnfs += 1;
-    });
-	
-	// copy and edit NSD: general info and involved vnfs
-	var nsd = defaultNsd;		// since there's only one NSD, no proper copy needed
-	nsd.author = document.getElementById('author').value;
-	nsd.vendor = document.getElementById('vendor').value;
-	nsd.name = document.getElementById('name').value;
-	nsd.description = document.getElementById('description').value;
-	
-	for (i=0; i<numVnfs; i++) {
-		// list involved vnfs
-		if (!nsd.network_functions[i])		//create new entry if non-existent
-			nsd.network_functions[i] = {};
-		nsd.network_functions[i].vnf_id = "vnf" + i;
-		nsd.network_functions[i].vnf_name = vnfds[i].name;
-		nsd.network_functions[i].vnf_vendor = vnfds[i].vendor;
-		nsd.network_functions[i].vnf_version = vnfds[i].version;
-		
-		// create corresponding vLinks
-		nsd.virtual_links[0].connection_points_reference[i] = "vnf" + i + ":mgmt";		// mgmt
-		nsd.virtual_links[1].id = "input-2-vnf0";								// input to 1st vnf
-		nsd.virtual_links[1].connection_points_reference[1] = "vnf0:input";
+// trigger generation of Tango and OSM descriptors
+function generateDescriptors() {
+    var descriptors = genTangoDescriptors(defaultTangoNsd, defaultTangoVnfd, uploadedVnfs);
+    // TODO: generate OSM descriptors
 
-		if (!nsd.virtual_links[i+2])		//create new entry if non-existent
-			nsd.virtual_links[i+2] = {id:"", connectivity_type:"", connection_points_reference:[]};
-		nsd.virtual_links[i+2].connectivity_type = "E-Line";
-		nsd.virtual_links[i+2].connection_points_reference[0] = "vnf" + i + ":output";
-		if (i != numVnfs-1) {
-			nsd.virtual_links[i+2].id = "vnf" + i + "-2-vnf" + (i+1);
-			nsd.virtual_links[i+2].connection_points_reference[1] = "vnf" + (i+1) + ":input";
-		}
-		else {
-			nsd.virtual_links[i+2].id = "vnf" + i + "-2-output";
-			nsd.virtual_links[i+2].connection_points_reference[1] = "output";
-		}
-	}
-	nsd.virtual_links[0].connection_points_reference[numVnfs] = "mgmt";	
-	
-	// adjust forwarding graph
-	nsd.forwarding_graphs[0].number_of_virtual_links = numVnfs + 1;
-	for (i=1; i<nsd.virtual_links.length; i++)		// skip 1st vLink (mgmt)
-		nsd.forwarding_graphs[0].constituent_virtual_links[i-1] = nsd.virtual_links[i].id;
-	for (i=0; i<numVnfs; i++)
-		nsd.forwarding_graphs[0].constituent_vnfs[i] = "vnf" + i;
-	var pos = 0;
-	// take in- and output of each vLink
-	for (i=1; i<nsd.virtual_links.length; i++) {		// skip 1st vLink (mgmt)
-		nsd.forwarding_graphs[0].network_forwarding_paths[0].connection_points[pos] = {connection_point_ref: nsd.virtual_links[i].connection_points_reference[0], position: pos+1};
-		pos++;
-		nsd.forwarding_graphs[0].network_forwarding_paths[0].connection_points[pos] = {connection_point_ref: nsd.virtual_links[i].connection_points_reference[1], position: pos+1};
-		pos++;
-	}
-		
-	showDescriptors(nsd, vnfds);
+    var nsd = descriptors[0];
+    var vnfds = descriptors[1];
+    showDescriptors(nsd, vnfds);
 }
 
 

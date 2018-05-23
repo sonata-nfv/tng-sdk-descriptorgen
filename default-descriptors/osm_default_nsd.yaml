@@ -1,4 +1,5 @@
-# same default VNFD as in tng-schema, just in OSM format/syntax
+# same default NSD as in tng-schema, just in OSM format/syntax
+# in contrast to Tango's NSDs, OSM's NSDs do not have connection points to outside "input/output"
 
 nsd-catalog:
   nsd:
@@ -20,4 +21,3 @@ nsd-catalog:
       - member-vnf-index-ref: 1
         vnfd-connection-point-ref: mgmt
         vnfd-id-ref: default-vnfd
-    # TODO: how to connect external inputs, outputs to the NS?

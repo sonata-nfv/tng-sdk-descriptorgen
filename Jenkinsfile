@@ -46,16 +46,20 @@ pipeline {
     }
     post {
          success {
-                 mail(from: "jenkins@sonata-nfv.eu", 
-                 to: "stefan.schneider@upb.de", 
-                 subject: "SUCCESS: ${env.JOB_NAME}/${env.BUILD_ID} (${env.BRANCH_NAME})",
-                 body: "${env.JOB_URL}")
+                 emailext(
+                     from: "jenkins@sonata-nfv.eu",
+                     to: "stefan.schneider@upb.de",
+                     subject: "SUCCESS: ${env.JOB_NAME}/${env.BUILD_ID} (${env.BRANCH_NAME})",
+                     body: "${env.JOB_URL}"
+                 )
          }
          failure {
-                  mail(from: "jenkins@sonata-nfv.eu", 
-                 to: "stefan.schneider@upb.de", 
-                 subject: "FAILURE: ${env.JOB_NAME}/${env.BUILD_ID} (${env.BRANCH_NAME})",
-                 body: "${env.JOB_URL}")
+                  emailext(
+                     from: "jenkins@sonata-nfv.eu",
+                     to: "stefan.schneider@upb.de",
+                     subject: "FAILURE: ${env.JOB_NAME}/${env.BUILD_ID} (${env.BRANCH_NAME})",
+                     body: "${env.JOB_URL}"
+                  )
          }
     }
 }

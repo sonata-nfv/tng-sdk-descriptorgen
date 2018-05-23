@@ -1,1 +1,1 @@
-Example VNFD files taken from [tng-schema](https://github.com/sonata-nfv/tng-schema).
+Example VNFD files taken from [tng-schema](https://github.com/sonata-nfv/tng-schema). Can be used to test uploading and using existing VNFDs inside a service when generating descriptors. 
