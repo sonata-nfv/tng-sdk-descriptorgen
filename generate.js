@@ -24,7 +24,7 @@ partner consortium (www.5gtango.eu). */
 // global variables
 var defaultTangoVnfd;
 var defaultTangoNsd;
-var productionMode = true;     // turn off for development/debugging: then loads default descr. from descriptorgen fork instead of tng-schema
+var productionMode = true;     // productionMode = true --> load default descriptors faster (default!); = false --> reflect changed descriptors within minutes
 var defaultOsmVnfd;
 var defaultOsmNsd;
 var uploadedVnfs = {};
@@ -79,19 +79,22 @@ function refresh() {
 // load default VNFD and NSD from GitHub (asynchronous -> set VNFD, NSD and ask for user input when ready)
 function loadDescriptors() {
 	if (productionMode) {
-        // load most recent 5GTANGO default descriptors from the tng-schema repository
+        // load most recent 5GTANGO default descriptors from the tng-schema repository using RawGit production CDN
         var tangoVnfdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-schema/4ea30d03/function-descriptor/examples/default-vnfd.yml";
         var tangoNsdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-schema/4ea30d03/service-descriptor/examples/default-nsd.yml";
+
+        //TODO: OSM production CDN
+        // var osmVnfdUrl =
     }
     else {
-        // or load them from a descriptorgen fork (only uncomment for development, testing)
-        console.log("productionMode off: Load default descr. from StefanUPB/tng-sdk-descriptorgen + no caching")
+        // or load them from StefanUPB/tng-sdk-descriptorgen fork using RawGit development CDN (only for development, testing)
+        console.log("productionMode off: Load default descr. from StefanUPB/tng-sdk-descriptorgen + no caching");
         var tangoVnfdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/master/default-descriptors/tango_default_vnfd.yml";
         var tangoNsdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/master/default-descriptors/tango_default_nsd.yml";
+
+        var osmVnfdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/master/default-descriptors/osm_default_vnfd.yaml";
+        var osmNsdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/master/default-descriptors/osm_default_nsd.yaml";
     }
-
-    // load OSM default descriptors
-
 	
 	// hide the generate button and input and show the generate new and download buttons
 	document.getElementById('nsdInput').style.display = 'none';
@@ -99,8 +102,6 @@ function loadDescriptors() {
 	document.getElementById('submitBtn').style.display = 'none';
 	document.getElementById('newBtn').style.display = 'block';
 	document.getElementById('downloadBtn').style.display = 'block';
-
-	console.log(tangoVnfdUrl)
 
     // load descriptors; only cache default descriptors in production, not in development
 	$.ajax({url: tangoVnfdUrl, success: setVnfd, cache: productionMode});
@@ -111,8 +112,7 @@ function loadDescriptors() {
 
 function setVnfd(data) {
 	defaultTangoVnfd = jsyaml.load(data);
-	console.log("vcpus: " + defaultTangoVnfd.virtual_deployment_units[0].resource_requirements.cpu.vcpus);
-	
+
 	if (typeof defaultTangoNsd != 'undefined')
 		generateDescriptors();
 }
