@@ -22,8 +22,11 @@ partner consortium (www.5gtango.eu). */
 
 
 // global variables
-var defaultVnfd;
-var defaultNsd;
+var defaultTangoVnfd;
+var defaultTangoNsd;
+var productionMode = true;     // turn off for development/debugging: then loads default descr. from descriptorgen fork instead of tng-schema
+var defaultOsmVnfd;
+var defaultOsmNsd;
 var uploadedVnfs = {};
 
 // button click
@@ -75,13 +78,17 @@ function refresh() {
 
 // load default VNFD and NSD from GitHub (asynchronous -> set VNFD, NSD and ask for user input when ready)
 function loadDescriptors() {
-	// load most recent 5GTANGO default descriptors from the tng-schema repository
-	//var vnfdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-schema/4ea30d03/function-descriptor/examples/default-vnfd.yml";
-	//var nsdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-schema/4ea30d03/service-descriptor/examples/default-nsd.yml";
-
-	// or load them from a descriptorgen fork (only uncomment for development, testing)
-    var vnfdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/master/default-descriptors/tango_default_vnfd.yml";
-    var nsdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/master/default-descriptors/tango_default_nsd.yml";
+	if (productionMode) {
+        // load most recent 5GTANGO default descriptors from the tng-schema repository
+        var tangoVnfdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-schema/4ea30d03/function-descriptor/examples/default-vnfd.yml";
+        var tangoNsdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-schema/4ea30d03/service-descriptor/examples/default-nsd.yml";
+    }
+    else {
+        // or load them from a descriptorgen fork (only uncomment for development, testing)
+        console.log("productionMode off: Load default descr. from StefanUPB/tng-sdk-descriptorgen + no caching")
+        var tangoVnfdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/master/default-descriptors/tango_default_vnfd.yml";
+        var tangoNsdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/master/default-descriptors/tango_default_nsd.yml";
+    }
 
     // load OSM default descriptors
 
@@ -92,31 +99,35 @@ function loadDescriptors() {
 	document.getElementById('submitBtn').style.display = 'none';
 	document.getElementById('newBtn').style.display = 'block';
 	document.getElementById('downloadBtn').style.display = 'block';
-	
-	$.get(vnfdUrl, setVnfd);
-	$.get(nsdUrl, setNsd);
+
+	console.log(tangoVnfdUrl)
+
+    // load descriptors; only cache default descriptors in production, not in development
+	$.ajax({url: tangoVnfdUrl, success: setVnfd, cache: productionMode});
+	$.ajax({url: tangoNsdUrl, success: setNsd, cache: productionMode});
 	
 	return false;
 }
 
 function setVnfd(data) {
-	defaultVnfd = jsyaml.load(data);
+	defaultTangoVnfd = jsyaml.load(data);
+	console.log("vcpus: " + defaultTangoVnfd.virtual_deployment_units[0].resource_requirements.cpu.vcpus);
 	
-	if (typeof defaultNsd != 'undefined')
+	if (typeof defaultTangoNsd != 'undefined')
 		generateDescriptors();
 }
 
 function setNsd(data) {
-	defaultNsd = jsyaml.load(data);
+	defaultTangoNsd = jsyaml.load(data);
 	
-	if (typeof defaultVnfd != 'undefined')
+	if (typeof defaultTangoVnfd != 'undefined')
 		generateDescriptors();
 }
 
 
 // trigger generation of Tango and OSM descriptors
 function generateDescriptors() {
-    var descriptors = genTangoDescriptors(defaultNsd, defaultVnfd, uploadedVnfs);
+    var descriptors = genTangoDescriptors(defaultTangoNsd, defaultTangoVnfd, uploadedVnfs);
     // TODO: generate OSM descriptors
 
     var nsd = descriptors[0];

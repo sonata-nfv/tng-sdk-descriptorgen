@@ -38,7 +38,7 @@ function generateVnfds(defaultVnfd, uploadedVnfs) {
     var numDefaultVnfs = 0;
     $('.vnf-select').each(function(i, obj) {
         if (obj.value == "default") {
-            vnfds.push(Object.assign({}, defaultVnfd));     // shallow copy defaultVnfd (enough since VNFDs aren't nested)
+            vnfds.push(Object.assign({}, defaultVnfd));     // shallow copy defaultTangoVnfd (enough since VNFDs aren't nested)
             vnfds[i].name = "default-vnf" + numDefaultVnfs;
             numDefaultVnfs += 1;
         }
