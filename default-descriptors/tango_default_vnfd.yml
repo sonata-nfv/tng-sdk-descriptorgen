@@ -19,7 +19,7 @@ virtual_deployment_units:
     vm_image_format: "docker" 
     resource_requirements:
       cpu:
-        vcpus: 1
+        vcpus: 5
       memory:
         size: 1
         size_unit: "GB"
