@@ -45,7 +45,7 @@ $(document).ready(function(){
             '<div class="input-group my-1">' +
             '<select class="form-control vnf-select" id="vnf' + numVnfs + '"><option value="default">Default VNFD</option></select>' +
             '<input type="text" class="form-control" id="image' + numVnfs + '" value="ubuntu:16.04" required>' +
-            '<select class="form-control vnf-select" id="type' + numVnfs + '"><option value="docker">docker</option><option value="vhd">vhd</option><option value="vmdk">vmdk</option><option value="vdi">vdi</option>' +
+            '<select class="form-control" id="type' + numVnfs + '"><option value="docker">docker</option><option value="vhd">vhd</option><option value="vmdk">vmdk</option><option value="vdi">vdi</option>' +
             '<option value="iso">iso</option><option value="qcow2">qcow2</option><option value="ova">ova</option><option value="ovf">ovf</option><option value="raw">raw</option></select>' +
             '<span class="input-group-btn"><button class="btn rem-btn" type="button">Remove VNF</button></span></div>';
         $("#addBtn").before($(newVnf));
