@@ -36,13 +36,17 @@ function generateVnfds(defaultVnfd, uploadedVnfs) {
     defaultVnfd.author = document.getElementById('author').value;
     defaultVnfd.vendor = document.getElementById('vendor').value;
     var numDefaultVnfs = 0;
+    // iterate through VNFs (using .vnf-select, which points to the VNFD of each VNF)
     $('.vnf-select').each(function(i, obj) {
         if (obj.value == "default") {
-            vnfds.push(Object.assign({}, defaultVnfd));     // shallow copy defaultTangoVnfd (enough since VNFDs aren't nested)
+            vnfds.push(jQuery.extend(true, {}, defaultVnfd));   // deep copy (necessary for nested VNFD fields)
             vnfds[i].name = "default-vnf" + numDefaultVnfs;
+            vnfds[i].virtual_deployment_units[0].vm_image = document.getElementById('image' + (i+1)).value;
+            vnfds[i].virtual_deployment_units[0].vm_image_format = document.getElementById('type' + (i+1)).value;
             numDefaultVnfs += 1;
         }
         else {
+            console.log("VNF " + i + ": Using uploaded VNFD: " + obj.value);
             vnfds.push(uploadedVnfs[obj.value]);
         }
     });

@@ -40,9 +40,14 @@ $(document).ready(function(){
     // add VNF
     $("#addBtn").click(function(e){
         numVnfs = numVnfs + 1;
-        var newVnf = '<div class="input-group my-1">' +
-            '<select class="form-control vnf-select" id="vnf' + numVnfs + '"><option value="default">default</option></select>' +
-            '<span class="input-group-btn"><button class="btn rem-btn" >Remove VNF</button></span></div>';
+        // copy & paste from index.html
+        var newVnf =
+            '<div class="input-group my-1">' +
+            '<select class="form-control vnf-select" id="vnf' + numVnfs + '"><option value="default">Default VNFD</option></select>' +
+            '<input type="text" class="form-control" id="image' + numVnfs + '" value="ubuntu:16.04" required>' +
+            '<select class="form-control" id="type' + numVnfs + '"><option value="docker">docker</option><option value="vhd">vhd</option><option value="vmdk">vmdk</option><option value="vdi">vdi</option>' +
+            '<option value="iso">iso</option><option value="qcow2">qcow2</option><option value="ova">ova</option><option value="ovf">ovf</option><option value="raw">raw</option></select>' +
+            '<span class="input-group-btn"><button class="btn rem-btn" type="button">Remove VNF</button></span></div>';
         $("#addBtn").before($(newVnf));
         // add options: all previously uploaded VNFDs
         for (vnf in uploadedVnfs) {
@@ -83,8 +88,8 @@ function loadDescriptors() {
         var tangoVnfdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-schema/4ea30d03/function-descriptor/examples/default-vnfd.yml";
         var tangoNsdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-schema/4ea30d03/service-descriptor/examples/default-nsd.yml";
 
-        //TODO: OSM production CDN
-        // var osmVnfdUrl =
+        var osmVnfdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-sdk-descriptorgen/134e6193/default-descriptors/osm_default_vnfd.yaml";
+        var osmNsdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-sdk-descriptorgen/134e6193/default-descriptors/osm_default_nsd.yaml";
     }
     else {
         // or load them from StefanUPB/tng-sdk-descriptorgen fork using RawGit development CDN (only for development, testing)

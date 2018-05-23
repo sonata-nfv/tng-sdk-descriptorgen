@@ -44,6 +44,10 @@ This triggers the tests using Chrome in headless mode. Terminal 2 informs about 
 
 The web interface asks for high-level information about the network service such as author and service name. For all fields, default values are provided to support the easy and fast generation of new descriptors. Clicking the "Generate" button triggers the generation of the descriptors.
 
+The GUI also allows to upload already existing VNFDs that should be included in a network service. The descriptorgen then automatically generates the other VNFDs and integrates the existing VNFD in the NSD.
+As a requirement, the uploaded VNFDs need the connection points input, output, and mgmt.
+To integrate an uploaded VNFD in a network service, simply select it in the left drop-down menu. For such uploaded VNFDs, the image is already defined such that the specified image name and type in the GUI is ignored.
+
 ![input](docs/input.png)
 
 ### Output
@@ -59,15 +63,3 @@ The generated descriptors are directly shown in code boxes that allow further ma
 Please check or create [issues](https://github.com/sonata-nfv/tng-sdk-descriptorgen/issues) matching the current and future development steps.
 
 Contribution is very welcome! Please, fork the repository and create pull requests to submit implemented features. Make sure all unit tests pass before creating a pull request.
-
-
-
-**TODO: Comments after Aveiro F2F**
-
-* support specifying high-level information in some kind of meta-descriptor that can be compiled into descriptors via command line --> more comfortable for advanced users who don't want to use the web interface
-* specify min/max number of VNFCs per VDU
-* allow to specify multiple VDUs per VNF?
-* Other types of descriptors?
-  * Test descriptors
-  * Policy descriptors (eg, placement constraints)
-* ensure consistency with specific schema version
