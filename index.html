@@ -37,14 +37,27 @@
                 <!--TODO: cooler upload with drag and drop-->
                 <!--<form action="/file-upload" class="dropzone" id="my-awesome-dropzone"></form>-->
 
-                <label for="vnfd_upload">VNFD upload</label>
+                <label for="vnfd_upload">Upload of existing VNFDs</label>
                 <input type="file" class="form-control-file" id="vnfd_upload" aria-describedby="fileHelp" onchange="uploadVnfd();">
-                <small id="fileHelp" class="form-text text-muted mb-2">To reuse existing VNFs in the network service, upload their descriptors (VNFDs).</small>
+                <small id="fileHelp" class="form-text text-muted mb-5">To reuse existing VNFs in the network service, upload their descriptors (VNFDs).</small>
 
                 <label id="vnfsLabel" for="vnfGroup1">VNFs</label>
+                <small id="vnfsHelp" class="form-text text-muted">Please select a base VNFD, specify the VNF image/path, and select the image type.</small>
                 <div class="input-group my-1" id="vnfGroup1">
                     <select class="form-control vnf-select" id="vnf1">
-                        <option value="default">default</option>
+                        <option value="default">Default VNFD</option>
+                    </select>
+                    <input type="text" class="form-control" id="image1" value="ubuntu:16.04" required>
+                    <select class="form-control vnf-select" id="type1">
+                        <option value="docker">docker</option>
+                        <option value="vhd">vhd</option>
+                        <option value="vmdk">vmdk</option>
+                        <option value="vdi">vdi</option>
+                        <option value="iso">iso</option>
+                        <option value="qcow2">qcow2</option>
+                        <option value="ova">ova</option>
+                        <option value="ovf">ovf</option>
+                        <option value="raw">raw</option>
                     </select>
                     <span class="input-group-btn">
                         <button class="btn rem-btn" type="button">Remove VNF</button>
