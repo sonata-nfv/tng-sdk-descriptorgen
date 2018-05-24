@@ -238,20 +238,24 @@ function download(data, filename, type = "text/yaml") {
 	}, 0); 
 }
 	
-	
+
+// TODO: download in project format (somehow use the project tool)
 // create and download zip file of all descriptors
 function downloadAll() {
 	var zip = JSZip();
-	
-	// retrieve current descriptors to cover possible manual changes
+
+	// retrieve and zip current descriptors to cover possible manual changes
 	var divNode = document.getElementById('descriptors');
 	var children = divNode.getElementsByTagName('pre');
 	for (i = 0; i < children.length; i++) {
+	    console.log(i);
+	    console.log(children[i]);
 		var code = children[i].innerText;
-		var yaml = jsyaml.load(code);
-		zip.file(yaml.name + ".yaml", code);
+		// TODO: more useful file names
+		zip.file("descriptor" + i + ".yaml", code);
 	}
-	
+
+	// download the zipped files
 	zip.generateAsync({type:"blob"}).then(function(content) {
 		download(content, "descriptors.zip", "blob");
 	});
