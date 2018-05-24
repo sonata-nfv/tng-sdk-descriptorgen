@@ -24,10 +24,14 @@ partner consortium (www.5gtango.eu). */
 // global variables
 var defaultTangoVnfd;
 var defaultTangoNsd;
-var productionMode = true;     // productionMode = true --> load default descriptors faster (default!); = false --> reflect changed descriptors within minutes
 var defaultOsmVnfd;
 var defaultOsmNsd;
+var tangoVnfds;
+var tangoNsd;
+var osmVnfds;
+var osmNsd;
 var uploadedVnfs = {};
+var productionMode = true;     // productionMode = true --> load default descriptors faster (default!); = false --> reflect changed descriptors within minutes
 
 // button click
 $('#submitBtn').click(loadDescriptors);
@@ -127,39 +131,65 @@ function generateDescriptors(data1, data2, data3, data4) {
     defaultOsmVnfd = jsyaml.safeLoad(data3[0]);
     defaultOsmNsd = jsyaml.safeLoad(data4[0]);
 
-    //var descriptors = genTangoDescriptors(defaultTangoNsd, defaultTangoVnfd, uploadedVnfs);
+    var descriptors = genTangoDescriptors(defaultTangoNsd, defaultTangoVnfd, uploadedVnfs);
+    tangoNsd = descriptors[0];
+    tangoVnfds = descriptors[1];
+
     var descriptors = genOsmDescriptors(defaultOsmNsd, defaultOsmVnfd, uploadedVnfs);
+    osmNsd = descriptors[0];
+    osmVnfds = descriptors[1];
 
-    var nsd = descriptors[0];
-    var vnfds = descriptors[1];
-
-    showDescriptors(nsd, vnfds);
+    showDescriptors();
 }
 
 
-// show the edited descriptors for further editing and copying
-function showDescriptors(nsd, vnfds) {	
+// show the generated descriptors for further editing and copying
+function showDescriptors() {
 	// print instructions
 	document.getElementById('info').innerHTML = "Please edit, copy & paste, or download the descriptors below as needed.";
-	
-	// print NSD
-	var nsdHeader = document.getElementById('nsd');
-	nsdHeader.innerHTML = "NSD";
-	var nsdCode = document.getElementById('nsd-code');
-	addCode("nsd", nsd, nsdCode);
-	addDownloadButton("nsd", nsd, nsdCode);
+
+	// TODO: avoid duplicate code by iterating over all supported platforms (currently tango and osm)
+    // Tango
+    document.getElementById('tango').innerHTML = "5GTANGO descriptors";
+    var nsd = tangoNsd;
+    var vnfds = tangoVnfds;
+    // print NSD
+	document.getElementById('tango-nsd').innerHTML = "NSD";
+	var nsdCode = document.getElementById('tango-nsd-code');
+	addCode("tango-nsd", nsd, nsdCode);
+	addDownloadButton("tango-nsd", nsd, nsdCode);
 	
 	// print VNFDs
-	var vnfdHeader = document.getElementById('vnfds');
-	vnfdHeader.innerHTML = "VNFDs";
-	var vnfdCode = document.getElementById('vnfd-code');
-	for (i = 0; i < vnfds.length; i++) {
-		var vnfdSubheader = document.createElement('h3');
+	document.getElementById('tango-vnfds').innerHTML = "VNFDs";
+	var vnfdCode = document.getElementById('tango-vnfd-code');
+	for (var i = 0; i < vnfds.length; i++) {
+		var vnfdSubheader = document.createElement('h4');
 		vnfdSubheader.innerHTML = "VNFD " + i;
 		vnfdCode.appendChild(vnfdSubheader);
-		addCode("vnfd" + i, vnfds[i], vnfdCode);
-		addDownloadButton("vnfd" + i, vnfds[i], vnfdCode);
+		addCode("tango-vnfd" + i, vnfds[i], vnfdCode);
+		addDownloadButton("tango-vnfd" + i, vnfds[i], vnfdCode);
 	}
+
+    // OSM
+    document.getElementById('osm').innerHTML = "OSM descriptors";
+    var nsd = osmNsd;
+    var vnfds = osmVnfds;
+    // print NSD
+    document.getElementById('osm-nsd').innerHTML = "NSD";
+    var nsdCode = document.getElementById('osm-nsd-code');
+    addCode("osm-nsd", nsd, nsdCode);
+    addDownloadButton("osm-nsd", nsd, nsdCode);
+
+    // print VNFDs
+    document.getElementById('osm-vnfds').innerHTML = "VNFDs";
+    var vnfdCode = document.getElementById('osm-vnfd-code');
+    for (var i = 0; i < vnfds.length; i++) {
+        var vnfdSubheader = document.createElement('h4');
+        vnfdSubheader.innerHTML = "VNFD " + i;
+        vnfdCode.appendChild(vnfdSubheader);
+        addCode("osm-vnfd" + i, vnfds[i], vnfdCode);
+        addDownloadButton("osm-vnfd" + i, vnfds[i], vnfdCode);
+    }
 	
 	PR.prettyPrint();
 }
