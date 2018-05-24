@@ -24,10 +24,14 @@ partner consortium (www.5gtango.eu). */
 // global variables
 var defaultTangoVnfd;
 var defaultTangoNsd;
-var productionMode = true;     // productionMode = true --> load default descriptors faster (default!); = false --> reflect changed descriptors within minutes
 var defaultOsmVnfd;
 var defaultOsmNsd;
+var tangoVnfds;
+var tangoNsd;
+var osmVnfds;
+var osmNsd;
 var uploadedVnfs = {};
+var productionMode = true;     // productionMode = true --> load default descriptors faster (default!); = false --> reflect changed descriptors within minutes
 
 // button click
 $('#submitBtn').click(loadDescriptors);
@@ -109,61 +113,83 @@ function loadDescriptors() {
 	document.getElementById('downloadBtn').style.display = 'block';
 
     // load descriptors; only cache default descriptors in production, not in development
-	$.ajax({url: tangoVnfdUrl, success: setVnfd, cache: productionMode});
-	$.ajax({url: tangoNsdUrl, success: setNsd, cache: productionMode});
+	var loadTangoVnfd = $.ajax({url: tangoVnfdUrl, cache: productionMode});
+	var loadTangoNsd = $.ajax({url: tangoNsdUrl, cache: productionMode});
+    var loadOsmVnfd = $.ajax({url: osmVnfdUrl, cache: productionMode});
+    var loadOsmNsd = $.ajax({url: osmNsdUrl, cache: productionMode});
+    $.when(loadTangoVnfd, loadTangoNsd, loadOsmVnfd, loadOsmNsd).then(generateDescriptors);
 	
 	return false;
 }
 
-function setVnfd(data) {
-	defaultTangoVnfd = jsyaml.load(data);
-
-	if (typeof defaultTangoNsd != 'undefined')
-		generateDescriptors();
-}
-
-function setNsd(data) {
-	defaultTangoNsd = jsyaml.load(data);
-	
-	if (typeof defaultTangoVnfd != 'undefined')
-		generateDescriptors();
-}
-
 
 // trigger generation of Tango and OSM descriptors
-function generateDescriptors() {
-    var descriptors = genTangoDescriptors(defaultTangoNsd, defaultTangoVnfd, uploadedVnfs);
-    // TODO: generate OSM descriptors
+function generateDescriptors(data1, data2, data3, data4) {
+    // get the returned default
+    defaultTangoVnfd = jsyaml.safeLoad(data1[0]);
+    defaultTangoNsd = jsyaml.safeLoad(data2[0]);
+    defaultOsmVnfd = jsyaml.safeLoad(data3[0]);
+    defaultOsmNsd = jsyaml.safeLoad(data4[0]);
 
-    var nsd = descriptors[0];
-    var vnfds = descriptors[1];
-    showDescriptors(nsd, vnfds);
+    var descriptors = genTangoDescriptors(defaultTangoNsd, defaultTangoVnfd, uploadedVnfs);
+    tangoNsd = descriptors[0];
+    tangoVnfds = descriptors[1];
+
+    var descriptors = genOsmDescriptors(defaultOsmNsd, defaultOsmVnfd, uploadedVnfs);
+    osmNsd = descriptors[0];
+    osmVnfds = descriptors[1];
+
+    showDescriptors();
 }
 
 
-// show the edited descriptors for further editing and copying
-function showDescriptors(nsd, vnfds) {	
+// show the generated descriptors for further editing and copying
+function showDescriptors() {
 	// print instructions
 	document.getElementById('info').innerHTML = "Please edit, copy & paste, or download the descriptors below as needed.";
-	
-	// print NSD
-	var nsdHeader = document.getElementById('nsd');
-	nsdHeader.innerHTML = "NSD";
-	var nsdCode = document.getElementById('nsd-code');
-	addCode("nsd", nsd, nsdCode);
-	addDownloadButton("nsd", nsd, nsdCode);
+
+	// TODO: avoid duplicate code by iterating over all supported platforms (currently tango and osm)
+    // Tango
+    document.getElementById('tango').innerHTML = "5GTANGO descriptors";
+    var nsd = tangoNsd;
+    var vnfds = tangoVnfds;
+    // print NSD
+	document.getElementById('tango-nsd').innerHTML = "NSD";
+	var nsdCode = document.getElementById('tango-nsd-code');
+	addCode("tango-nsd", nsd, nsdCode);
+	addDownloadButton("tango-nsd", nsd, nsdCode);
 	
 	// print VNFDs
-	var vnfdHeader = document.getElementById('vnfds');
-	vnfdHeader.innerHTML = "VNFDs";
-	var vnfdCode = document.getElementById('vnfd-code');
-	for (i = 0; i < vnfds.length; i++) {
-		var vnfdSubheader = document.createElement('h3');
+	document.getElementById('tango-vnfds').innerHTML = "VNFDs";
+	var vnfdCode = document.getElementById('tango-vnfd-code');
+	for (var i = 0; i < vnfds.length; i++) {
+		var vnfdSubheader = document.createElement('h4');
 		vnfdSubheader.innerHTML = "VNFD " + i;
 		vnfdCode.appendChild(vnfdSubheader);
-		addCode("vnfd" + i, vnfds[i], vnfdCode);
-		addDownloadButton("vnfd" + i, vnfds[i], vnfdCode);
+		addCode("tango-vnfd" + i, vnfds[i], vnfdCode);
+		addDownloadButton("tango-vnfd" + i, vnfds[i], vnfdCode);
 	}
+
+    // OSM
+    document.getElementById('osm').innerHTML = "OSM descriptors";
+    var nsd = osmNsd;
+    var vnfds = osmVnfds;
+    // print NSD
+    document.getElementById('osm-nsd').innerHTML = "NSD";
+    var nsdCode = document.getElementById('osm-nsd-code');
+    addCode("osm-nsd", nsd, nsdCode);
+    addDownloadButton("osm-nsd", nsd, nsdCode);
+
+    // print VNFDs
+    document.getElementById('osm-vnfds').innerHTML = "VNFDs";
+    var vnfdCode = document.getElementById('osm-vnfd-code');
+    for (var i = 0; i < vnfds.length; i++) {
+        var vnfdSubheader = document.createElement('h4');
+        vnfdSubheader.innerHTML = "VNFD " + i;
+        vnfdCode.appendChild(vnfdSubheader);
+        addCode("osm-vnfd" + i, vnfds[i], vnfdCode);
+        addDownloadButton("osm-vnfd" + i, vnfds[i], vnfdCode);
+    }
 	
 	PR.prettyPrint();
 }
@@ -212,20 +238,24 @@ function download(data, filename, type = "text/yaml") {
 	}, 0); 
 }
 	
-	
+
+// TODO: download in project format (somehow use the project tool)
 // create and download zip file of all descriptors
 function downloadAll() {
 	var zip = JSZip();
-	
-	// retrieve current descriptors to cover possible manual changes
+
+	// retrieve and zip current descriptors to cover possible manual changes
 	var divNode = document.getElementById('descriptors');
 	var children = divNode.getElementsByTagName('pre');
 	for (i = 0; i < children.length; i++) {
+	    console.log(i);
+	    console.log(children[i]);
 		var code = children[i].innerText;
-		var yaml = jsyaml.load(code);
-		zip.file(yaml.name + ".yaml", code);
+		// TODO: more useful file names
+		zip.file("descriptor" + i + ".yaml", code);
 	}
-	
+
+	// download the zipped files
 	zip.generateAsync({type:"blob"}).then(function(content) {
 		download(content, "descriptors.zip", "blob");
 	});

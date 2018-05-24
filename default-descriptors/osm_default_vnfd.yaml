@@ -7,7 +7,7 @@ vnfd-catalog:
       short-name: default-vnfd
       vendor: ETSI
       version: 0.9
-      description: "A default NSD with one default VNFDs"
+      description: "A default VNFD with one VDU"
 
       vdu:
         - id: vdu01
@@ -44,5 +44,3 @@ vnfd-catalog:
           
       mgmt-interface:
         cp: mgmt
-          
-      # TODO: support for multiple VDUs? requires internal conn. points, internal-vld, ...

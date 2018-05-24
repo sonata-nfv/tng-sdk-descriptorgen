@@ -11,8 +11,10 @@ describe('tng-sdk-descriptorgen output', function() {
 	it('should generate and show the descriptors', function() {	
 		expect(element(by.id('info')).getText()).toEqual('Please edit, copy & paste, or download the descriptors below as needed.');
 		var codeBlocks = element.all(by.className('prettyprint lang-yaml'));
-		expect(codeBlocks.first().getAttribute('id')).toEqual('nsdCode');
-		expect(codeBlocks.count()).toEqual(2);		// default: 1 NSD + 1 VNFD
+        // default: 1 NSD + 1 VNFD for each Tango and OSM
+		expect(codeBlocks.first().getAttribute('id')).toEqual('tango-nsdCode');
+        expect(codeBlocks.last().getAttribute('id')).toEqual('osm-vnfd0Code');
+		expect(codeBlocks.count()).toEqual(4);
 	});
 	
 	// non-trivial:
