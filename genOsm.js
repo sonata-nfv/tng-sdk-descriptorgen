@@ -78,41 +78,25 @@ function generateOsmNsd(defaultNsd, vnfds) {
         nsd["vld"][0]["vnfd-connection-point-ref"][i]["member-vnf-index-ref"] = i;
         nsd["vld"][0]["vnfd-connection-point-ref"][i]["vnfd-connection-point-ref"] = "mgmt";
         nsd["vld"][0]["vnfd-connection-point-ref"][i]["vnfd-id-ref"] = vnfds[i]["vnfd-catalog"]["vnfd"][0]["id"];
+    }
 
-        // TODO: connections between VNFs
-        // create corresponding vLinks
-    //     nsd.virtual_links[0].connection_points_reference[i] = "vnf" + i + ":mgmt";		// mgmt
-    //     nsd.virtual_links[1].id = "input-2-vnf0";								// input to 1st vnf
-    //     nsd.virtual_links[1].connection_points_reference[1] = "vnf0:input";
-    //
-    //     if (!nsd.virtual_links[i+2])		//create new entry if non-existent
-    //         nsd.virtual_links[i+2] = {id:"", connectivity_type:"", connection_points_reference:[]};
-    //     nsd.virtual_links[i+2].connectivity_type = "E-Line";
-    //     nsd.virtual_links[i+2].connection_points_reference[0] = "vnf" + i + ":output";
-    //     if (i != numVnfs-1) {
-    //         nsd.virtual_links[i+2].id = "vnf" + i + "-2-vnf" + (i+1);
-    //         nsd.virtual_links[i+2].connection_points_reference[1] = "vnf" + (i+1) + ":input";
-    //     }
-    //     else {
-    //         nsd.virtual_links[i+2].id = "vnf" + i + "-2-output";
-    //         nsd.virtual_links[i+2].connection_points_reference[1] = "output";
-    //     }
-    // }
-    // nsd.virtual_links[0].connection_points_reference[numVnfs] = "mgmt";
-    //
-    // // adjust forwarding graph
-    // nsd.forwarding_graphs[0].number_of_virtual_links = numVnfs + 1;
-    // for (i=1; i<nsd.virtual_links.length; i++)		// skip 1st vLink (mgmt)
-    //     nsd.forwarding_graphs[0].constituent_virtual_links[i-1] = nsd.virtual_links[i].id;
-    // for (i=0; i<numVnfs; i++)
-    //     nsd.forwarding_graphs[0].constituent_vnfs[i] = "vnf" + i;
-    // var pos = 0;
-    // // take in- and output of each vLink
-    // for (i=1; i<nsd.virtual_links.length; i++) {		// skip 1st vLink (mgmt)
-    //     nsd.forwarding_graphs[0].network_forwarding_paths[0].connection_points[pos] = {connection_point_ref: nsd.virtual_links[i].connection_points_reference[0], position: pos+1};
-    //     pos++;
-    //     nsd.forwarding_graphs[0].network_forwarding_paths[0].connection_points[pos] = {connection_point_ref: nsd.virtual_links[i].connection_points_reference[1], position: pos+1};
-    //     pos++;
+     // create vLinks between VNFs
+     for (i=0; i<numVnfs-1; i++) {
+        // start with vld i+1 because vld 0 is the mgmt vld
+        nsd["vld"][i+1] = {};
+        nsd["vld"][i+1]["id"] = "vnf" + i + "-2-vnf" + (i+1);
+        nsd["vld"][i+1]["name"] = "vnf" + i + "-2-vnf" + (i+1);
+        nsd["vld"][i+1]["vnfd-connection-point-ref"] = [];
+        nsd["vld"][i+1]["vnfd-connection-point-ref"][0] = {
+            "member-vnf-index-ref": i,
+            "vnfd-connection-point-ref": "output",
+            "vnfd-id-ref": vnfds[i]["vnfd-catalog"]["vnfd"][0]["id"]
+        };
+        nsd["vld"][i+1]["vnfd-connection-point-ref"][1] = {
+            "member-vnf-index-ref": i+1,
+            "vnfd-connection-point-ref": "input",
+            "vnfd-id-ref": vnfds[i+1]["vnfd-catalog"]["vnfd"][0]["id"]
+        };
     }
 
     return defaultNsd;
