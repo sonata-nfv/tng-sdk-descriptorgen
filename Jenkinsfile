@@ -17,12 +17,12 @@ pipeline {
         }
         stage('Style check') {
             steps {
-                echo 'Stage: Style check not yet implemented (there is no js standard)'
+                echo 'Stage: Style check not implemented (there is no js standard)'
             }
         }
 		stage('Promoting containers to integration env') {
             steps {
-                echo 'Integration tests don't make sense for the GUI/Javascript descriptorgen --> skipped'
+                echo 'Integration tests do not make sense for the GUI-based descriptorgen'
             }
 		}
         stage('Smoke tests') {
