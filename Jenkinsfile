@@ -17,30 +17,23 @@ pipeline {
         }
         stage('Style check') {
             steps {
-                echo 'Stage: Style check not yet implemented (there is no js standard)'
+                echo 'Stage: Style check not implemented (there is no js standard)'
             }
         }
-        stage('Container publication') {
+		stage('Promoting containers to integration env') {
             steps {
-                echo 'Stage: Container publication...'
-                sh "pipeline/publication/publication.sh"
+                echo 'Integration tests do not make sense for the GUI-based descriptorgen'
             }
-        }
-        stage('Deploy in integration') {
-            steps {
-                echo 'Stage: Deploy in integration ... (not implemented)'
-            }
-        }
+		}
         stage('Smoke tests') {
             steps {
                 echo 'Stage: Smoke test... (not implemented)'
             }
         }
-        stage('Publication') {
+		stage('Container publication') {
             steps {
-                echo 'Stage: Publication... (not implemented)'
-                // Public container publication
-                // Pypi publication
+                echo 'Stage: Container publication...'
+                sh "pipeline/publication/publication.sh"
             }
         }
     }
