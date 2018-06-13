@@ -21,17 +21,8 @@ pipeline {
             }
         }
 		stage('Promoting containers to integration env') {
-            when {
-                branch 'master'
-            }
             steps {
-                echo 'Stage: Promoting containers to integration env'
-                sh 'pipeline/promote/promote-int.sh'
-                sh 'rm -rf tng-devops || true'
-                sh 'git clone https://github.com/sonata-nfv/tng-devops.git'
-                dir(path: 'tng-devops') {
-                    sh 'ansible-playbook roles/sp.yml -i environments -e "target=int-sp"'
-                }
+                echo 'Integration tests don't make sense for the GUI/Javascript descriptorgen --> skipped'
             }
 		}
         stage('Smoke tests') {
