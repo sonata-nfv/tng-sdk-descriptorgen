@@ -20,27 +20,29 @@ pipeline {
                 echo 'Stage: Style check not yet implemented (there is no js standard)'
             }
         }
-        stage('Container publication') {
-            steps {
-                echo 'Stage: Container publication...'
-                sh "pipeline/publication/publication.sh"
+		stage('Promoting containers to integration env') {
+            when {
+                branch 'master'
             }
-        }
-        stage('Deploy in integration') {
             steps {
-                echo 'Stage: Deploy in integration ... (not implemented)'
+                echo 'Stage: Promoting containers to integration env'
+                sh 'pipeline/promote/promote-int.sh'
+                sh 'rm -rf tng-devops || true'
+                sh 'git clone https://github.com/sonata-nfv/tng-devops.git'
+                dir(path: 'tng-devops') {
+                    sh 'ansible-playbook roles/sp.yml -i environments -e "target=int-sp"'
+                }
             }
-        }
+		}
         stage('Smoke tests') {
             steps {
                 echo 'Stage: Smoke test... (not implemented)'
             }
         }
-        stage('Publication') {
+		stage('Container publication') {
             steps {
-                echo 'Stage: Publication... (not implemented)'
-                // Public container publication
-                // Pypi publication
+                echo 'Stage: Container publication...'
+                sh "pipeline/publication/publication.sh"
             }
         }
     }
