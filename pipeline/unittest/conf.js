@@ -1,8 +1,9 @@
 exports.config = {
-  seleniumAddress: 'http://localhost:4444/wd/hub',
   specs: ['*.js'],
+  chromeOnly: true,
+  directConnect: true,
   capabilities: {
-    browserName: 'firefox',
+    browserName: 'chrome',
 	chromeOptions: {
 		args: ['--headless', '--disable-gpu', '--no-sandbox', '--window-size=1920x1200']
 	}

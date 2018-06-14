@@ -143,6 +143,56 @@ function generateDescriptors(data1, data2, data3, data4) {
 }
 
 
+// generate and return the project.yml referencing the generated descriptors as JS object (can be dumped as yaml)
+function generateProjectYml() {
+    // create JS object with project info
+    var project = {
+        descriptor_extension: "yml",
+        version: "0.5",
+        files: [],
+        package: {
+            name: "generated-project",
+            version: "0.1"
+        }
+    };
+
+    // set general info based on provided high-level details (take from tangoNsd)
+    project["package"]["maintainer"] = tangoNsd["author"];
+    project["package"]["vendor"] = tangoNsd["vendor"];
+    project["package"]["description"] = tangoNsd["description"];
+
+    // add tango descriptor files to project.yml
+    project["files"].push({
+        path: getDescriptorFilename(tangoNsd),
+        type: "application/vnd.5gtango.nsd",
+        tags: ["eu.5gtango"]
+    });
+    for (var i = 0; i < tangoVnfds.length; i++) {
+        project["files"].push({
+            path: getDescriptorFilename(tangoVnfds[i]),
+            type: "application/vnd.5gtango.vnfd",
+            tags: ["eu.5gtango"]
+        });
+    }
+
+    // add osm descriptor files to project.yml
+    project["files"].push({
+        path: getDescriptorFilename(osmNsd),
+        type: "application/vnd.etsi.osm.nsd",
+        tags: ["etsi.osm"]
+    });
+    for (var i = 0; i < osmVnfds.length; i++) {
+        project["files"].push({
+            path: getDescriptorFilename(osmVnfds[i]),
+            type: "application/vnd.etsi.osm.vnfd",
+            tags: ["etsi.osm"]
+        });
+    }
+
+    return project;
+}
+
+
 // show the generated descriptors for further editing and copying
 function showDescriptors() {
 	// print instructions
@@ -239,20 +289,40 @@ function download(data, filename, type = "text/yaml") {
 }
 	
 
-// TODO: download in project format (somehow use the project tool)
+// retrieve and return a suitable file name based on a descriptors name (tango or osm; nsd or vnfd); descriptor = JS object
+function getDescriptorFilename(descriptor) {
+    // distinguish between tango/osm nsd/vnfd to extract the name correctly
+    var filename = "unnamed.yml";
+
+    if (descriptor.hasOwnProperty("nsd-catalog")) {
+        filename = "osm_" + descriptor["nsd-catalog"]["nsd"][0]["name"] + ".yml";
+    }
+    else if (descriptor.hasOwnProperty("vnfd-catalog")) {
+        filename = "osm_" + descriptor["vnfd-catalog"]["vnfd"][0]["name"] + ".yml";
+    }
+    else {
+        filename = "tango_" + descriptor["name"] + ".yml";
+    }
+
+    return filename;
+}
+
 // create and download zip file of all descriptors
 function downloadAll() {
-	var zip = JSZip();
+    var zip = JSZip();
 
-	// retrieve and zip current descriptors to cover possible manual changes
+    // generate project.yml (as JS object)
+    var project = generateProjectYml();
+    zip.file("project.yml", jsyaml.safeDump(project));
+
+	// retrieve current descriptors to cover possible manual changes
 	var divNode = document.getElementById('descriptors');
 	var children = divNode.getElementsByTagName('pre');
 	for (i = 0; i < children.length; i++) {
-	    console.log(i);
-	    console.log(children[i]);
-		var code = children[i].innerText;
-		// TODO: more useful file names
-		zip.file("descriptor" + i + ".yaml", code);
+	    // read modified code again to extract the descriptor name and use it as file name (+ tango/osm prefix)
+		var code = jsyaml.safeLoad(children[i].innerText);
+		var filename = getDescriptorFilename(code);
+		zip.file(filename, jsyaml.safeDump(code));
 	}
 
 	// download the zipped files

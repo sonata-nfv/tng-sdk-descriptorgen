@@ -1,5 +1,5 @@
 [![Join the chat at https://gitter.im/5gtango/tango-sdk](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/5gtango/tango-sdk)
- 
+
 <p align="center"><img src="https://github.com/sonata-nfv/tng-api-gtw/wiki/images/sonata-5gtango-logo-500px.png" /></p>
 
 # 5GTANGO Descriptor Generator
@@ -36,12 +36,15 @@ To test that everything is working correctly, you can use the provided unit test
 * `sudo webdriver-manager update`
 
 Protractor needs Java, which can be installed using `sudo apt-get install default-jdk` on Ubuntu.
-Once installed, the unit tests can be executed with
+Once installed, the unit tests can be executed with (inside the `pipeline/unittest` directory):
 
-* Terminal 1: `sudo webdriver-manager start`
-* Terminal 2 (inside the `pipeline/unittest` directory): `protractor conf.js`
+```
+protractor conf.js
+```
 
-This triggers the tests using Chrome in headless mode. Terminal 2 informs about the test progress and success. If and only if all tests finish successfully, `protractor` exits with code 0.
+
+
+This triggers the tests using Chrome in headless mode. If and only if all tests finish successfully, `protractor` exits with code 0.
 
 ## Workflow
 ### Input
