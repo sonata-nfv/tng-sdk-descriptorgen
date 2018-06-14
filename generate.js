@@ -270,6 +270,24 @@ function download(data, filename, type = "text/yaml") {
 }
 	
 
+// retrieve and return a suitable file name based on a descriptors name (tango or osm; nsd or vnfd); descriptor = JS object
+function getDescriptorFilename(descriptor) {
+    // distinguish between tango/osm nsd/vnfd to extract the name correctly
+    var filename = "unnamed.yml";
+
+    if (descriptor.hasOwnProperty("nsd-catalog")) {
+        filename = "osm_" + descriptor["nsd-catalog"]["nsd"][0]["name"] + ".yml";
+    }
+    else if (descriptor.hasOwnProperty("vnfd-catalog")) {
+        filename = "osm_" + descriptor["vnfd-catalog"]["vnfd"][0]["name"] + ".yml";
+    }
+    else {
+        filename = "tango_" + descriptor["name"] + ".yml";
+    }
+
+    return filename;
+}
+
 // create and download zip file of all descriptors
 function downloadAll() {
     var zip = JSZip();
@@ -278,13 +296,14 @@ function downloadAll() {
     var project = generateProjectYml();
     zip.file("project.yml", jsyaml.safeDump(project));
 
-	// retrieve and zip current descriptors to cover possible manual changes
+	// retrieve current descriptors to cover possible manual changes
 	var divNode = document.getElementById('descriptors');
 	var children = divNode.getElementsByTagName('pre');
 	for (i = 0; i < children.length; i++) {
-		var code = children[i].innerText;
-		// TODO: more useful file names
-		zip.file("descriptor" + i + ".yml", code);
+	    // read modified code again to extract the descriptor name and use it as file name (+ tango/osm prefix)
+		var code = jsyaml.safeLoad(children[i].innerText);
+		var filename = getDescriptorFilename(code);
+		zip.file(filename, jsyaml.safeDump(code));
 	}
 
 	// download the zipped files
