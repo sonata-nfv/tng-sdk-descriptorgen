@@ -143,6 +143,37 @@ function generateDescriptors(data1, data2, data3, data4) {
 }
 
 
+// generate and return the project.yml referencing the generated descriptors as JS object (can be dumped as yaml)
+function generateProjectYml() {
+    // create JS object with project info
+    var project = {
+        descriptor_extension: "yml",
+        version: "0.5",
+        files: [],
+        package: {
+            name: "generated-project",
+            version: "0.1"
+        }
+    };
+
+    // set general info based on provided high-level details (take from tangoNsd)
+    project["package"]["maintainer"] = tangoNsd["author"];
+    project["package"]["vendor"] = tangoNsd["vendor"];
+    project["package"]["description"] = tangoNsd["description"];
+
+    //TODO: add files; problem: reference correct filename -> set proper filenames in the zip!
+    // add files: Tango then OSM and NSD, then VNFDs
+    var file = {
+        path: "bla",
+        type: "application/vnd.5gtango.nsd",
+        tags: ["eu.5gtango"]
+    };
+
+    console.log(project);
+    return project;
+}
+
+
 // show the generated descriptors for further editing and copying
 function showDescriptors() {
 	// print instructions
@@ -239,20 +270,21 @@ function download(data, filename, type = "text/yaml") {
 }
 	
 
-// TODO: download in project format (somehow use the project tool)
 // create and download zip file of all descriptors
 function downloadAll() {
-	var zip = JSZip();
+    var zip = JSZip();
+
+    // generate project.yml (as JS object)
+    var project = generateProjectYml();
+    zip.file("project.yml", jsyaml.safeDump(project));
 
 	// retrieve and zip current descriptors to cover possible manual changes
 	var divNode = document.getElementById('descriptors');
 	var children = divNode.getElementsByTagName('pre');
 	for (i = 0; i < children.length; i++) {
-	    console.log(i);
-	    console.log(children[i]);
 		var code = children[i].innerText;
 		// TODO: more useful file names
-		zip.file("descriptor" + i + ".yaml", code);
+		zip.file("descriptor" + i + ".yml", code);
 	}
 
 	// download the zipped files
