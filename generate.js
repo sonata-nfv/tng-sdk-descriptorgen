@@ -161,15 +161,34 @@ function generateProjectYml() {
     project["package"]["vendor"] = tangoNsd["vendor"];
     project["package"]["description"] = tangoNsd["description"];
 
-    //TODO: add files; problem: reference correct filename -> set proper filenames in the zip!
-    // add files: Tango then OSM and NSD, then VNFDs
-    var file = {
-        path: "bla",
+    // add tango descriptor files to project.yml
+    project["files"].push({
+        path: getDescriptorFilename(tangoNsd),
         type: "application/vnd.5gtango.nsd",
         tags: ["eu.5gtango"]
-    };
+    });
+    for (var i = 0; i < tangoVnfds.length; i++) {
+        project["files"].push({
+            path: getDescriptorFilename(tangoVnfds[i]),
+            type: "application/vnd.5gtango.vnfd",
+            tags: ["eu.5gtango"]
+        });
+    }
 
-    console.log(project);
+    // add osm descriptor files to project.yml
+    project["files"].push({
+        path: getDescriptorFilename(osmNsd),
+        type: "application/vnd.etsi.osm.nsd",
+        tags: ["etsi.osm"]
+    });
+    for (var i = 0; i < osmVnfds.length; i++) {
+        project["files"].push({
+            path: getDescriptorFilename(osmVnfds[i]),
+            type: "application/vnd.etsi.osm.vnfd",
+            tags: ["etsi.osm"]
+        });
+    }
+
     return project;
 }
 
