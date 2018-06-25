@@ -15,7 +15,7 @@ vnfd-catalog:
           image: ubuntu16-04.qcow2
           vm-flavor:
             vcpu-count: 1
-            memory-gb: 1
+            memory-mb: 512
             storage-gb: 10
           interface:
             - name: vdu-mgmt
