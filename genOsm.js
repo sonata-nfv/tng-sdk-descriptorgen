@@ -43,7 +43,15 @@ function generateOsmVnfds(defaultVnfd, uploadedVnfs) {
             vnfd["name"] = "default-vnf" + numDefaultVnfs;
             vnfd["short-name"] = "default-vnf" + numDefaultVnfs;
             vnfd["vendor"] = document.getElementById('vendor').value;
+            vnfd["description"] = "A VNF based on " + document.getElementById('image' + (i+1)).value;
             vnfd["vdu"][0]["image"] = document.getElementById('image' + (i+1)).value;
+
+            // set unique interface names
+            var vdu_interface = vnfd["vdu"][0]["interface"];
+            vdu_interface[0]["name"] = "vnf" + numDefaultVnfs + "-mgmt";
+            vdu_interface[1]["name"] = "vnf" + numDefaultVnfs + "-input";
+            vdu_interface[2]["name"] = "vnf" + numDefaultVnfs + "-output";
+
             numDefaultVnfs += 1;
         }
         else {
