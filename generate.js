@@ -98,11 +98,11 @@ function loadDescriptors() {
     else {
         // or load them from StefanUPB/tng-sdk-descriptorgen fork using RawGit development CDN (only for development, testing)
         console.log("productionMode off: Load default descr. from StefanUPB/tng-sdk-descriptorgen + no caching");
-        var tangoVnfdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/master/default-descriptors/tango_default_vnfd.yml";
-        var tangoNsdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/master/default-descriptors/tango_default_nsd.yml";
+        var tangoVnfdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/dev/default-descriptors/tango_default_vnfd.yml";
+        var tangoNsdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/dev/default-descriptors/tango_default_nsd.yml";
 
-        var osmVnfdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/master/default-descriptors/osm_default_vnfd.yaml";
-        var osmNsdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/master/default-descriptors/osm_default_nsd.yaml";
+        var osmVnfdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/dev/default-descriptors/osm_default_vnfd.yaml";
+        var osmNsdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/dev/default-descriptors/osm_default_nsd.yaml";
     }
 	
 	// hide the generate button and input and show the generate new and download buttons
