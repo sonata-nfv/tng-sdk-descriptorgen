@@ -43,6 +43,7 @@ function generateOsmVnfds(defaultVnfd, uploadedVnfs) {
             vnfd["name"] = "default-vnf" + numDefaultVnfs;
             vnfd["short-name"] = "default-vnf" + numDefaultVnfs;
             vnfd["vendor"] = document.getElementById('vendor').value;
+            vnfd["description"] = "A VNF based on " + document.getElementById('image' + (i+1)).value;
             vnfd["vdu"][0]["image"] = document.getElementById('image' + (i+1)).value;
 
             // set unique interface names

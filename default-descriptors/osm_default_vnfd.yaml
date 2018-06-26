@@ -7,7 +7,7 @@ vnfd-catalog:
       short-name: default-vnfd
       vendor: etsi.osm
       version: 0.9
-      description: "A default VNFD with one VDU"
+      description: "A VNF based on ubuntu16-04.qcow2"
 
       vdu:
         - id: vdu01

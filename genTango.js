@@ -41,6 +41,7 @@ function generateTangoVnfds(defaultVnfd, uploadedVnfs) {
         if (obj.value == "default") {
             vnfds.push(jQuery.extend(true, {}, defaultVnfd));   // deep copy (necessary for nested VNFD fields)
             vnfds[i].name = "default-vnf" + numDefaultVnfs;
+            vnfds[i].description = "A VNF based on " + document.getElementById('image' + (i+1)).value;
             vnfds[i].virtual_deployment_units[0].vm_image = document.getElementById('image' + (i+1)).value;
             vnfds[i].virtual_deployment_units[0].vm_image_format = document.getElementById('type' + (i+1)).value;
             numDefaultVnfs += 1;
