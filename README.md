@@ -11,9 +11,10 @@ The resulting VNFDs and NSDs can still be modified as needed.
 
 Options:
 
-* Download the repository and open `index.html` in a web browser to use it locally (tested with Firefox 58)
+* Directly access the descriptor generator without download or installation on https://sonata-nfv.github.io/tng-sdk-descriptorgen/ (auto. updated) or http://sdk.5gtango.eu/ (may be outdated)
+
+* Download the repository and open `index.html` in a web browser to use it locally 
 * Download the repository and deploy the Descriptor Generator as a Docker container (see below)
-* Simply go to tango-sdk-sandbox.cs.upb.de (or soon sdk.5gtango.eu) to access the tool directly (running as Docker on a VM)
 
 
 ## Docker deployment
@@ -42,11 +43,11 @@ Once installed, the unit tests can be executed with (inside the `pipeline/unitte
 protractor conf.js
 ```
 
-
-
 This triggers the tests using Chrome in headless mode. If and only if all tests finish successfully, `protractor` exits with code 0.
 
-## Workflow
+## Documentation
+See the general workflow below. For further information refer to the [wiki](https://github.com/sonata-nfv/tng-sdk-descriptorgen/wiki).
+
 ### Input
 
 The web interface asks for high-level information about the network service such as author and service name. For all fields, default values are provided to support the easy and fast generation of new descriptors. Clicking the "Generate" button triggers the generation of the descriptors.
