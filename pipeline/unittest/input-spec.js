@@ -28,8 +28,8 @@ describe('tng-sdk-descriptorgen input', function() {
 	});
 	
 	it('should show the default inputs', function() {
-		expect(author.getAttribute('value')).toEqual('Tango');
-		expect(vendor.getAttribute('value')).toEqual('Tango');
+		expect(author.getAttribute('value')).toEqual('5GTANGO Developer');
+		expect(vendor.getAttribute('value')).toEqual('eu.5gtango');
 		expect(name.getAttribute('value')).toEqual('tango-nsd');
 		expect(description.getAttribute('value')).toEqual('Default description');
 		expect(vnf1.getAttribute('value')).toEqual('default');
