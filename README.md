@@ -14,7 +14,7 @@ Options:
 * Directly access the descriptor generator without download or installation on https://sonata-nfv.github.io/tng-sdk-descriptorgen/ (auto. updated) or http://sdk.5gtango.eu/ (may be outdated)
 
 * Download the repository and open `index.html` in a web browser to use it locally 
-* Download the repository and deploy the Descriptor Generator as a Docker container (see below)
+* Download the repository and deploy the Descriptor Generator as a Docker container (see below). This allows offline use as the default descriptors are served and loaded locally rather than from GitHub.
 
 
 ## Docker deployment
@@ -24,7 +24,7 @@ If you want to deploy the descriptor generator as a docker container, you can do
 * `sudo docker images` to check that the image is there
 * `sudo docker run -d -p 80:80 --name descriptorgen --rm tng-sdk-descriptorgen:latest` to start the docker container
 * `sudo docker container ls` to check that the container is running
-* Open localhost in your web browser to access the descriptor generation web interface
+* Open `localhost` in your web browser to access the descriptor generation web interface
 * `sudo docker stop descriptorgen` to stop the container
 
 `DockerfilePipeline` is just used for the Jenkins pipeline.
