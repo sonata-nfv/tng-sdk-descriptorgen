@@ -33,7 +33,7 @@ pipeline {
 		stage('Container publication') {
             steps {
                 echo 'Stage: Container publication...'
-                sh "pipeline/publication/publication.sh"
+                //sh "pipeline/publication/publication.sh"
             }
         }
     }
