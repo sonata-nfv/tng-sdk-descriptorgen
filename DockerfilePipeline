@@ -11,8 +11,8 @@ RUN echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' |
 RUN apt-get update -y && apt-get install -y google-chrome-stable
    
 # install up-to-date nodejs and npm
-RUN curl -sL https://deb.nodesource.com/setup_9.x | bash - && \
-    apt-get install -y nodejs
+RUN curl -sL https://deb.nodesource.com/setup_8.x | -E bash -
+RUN apt-get install -y nodejs
 RUN npm install -g npm
 
 # install and setup protractor
