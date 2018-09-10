@@ -77,6 +77,7 @@ document.getElementById('nsdInput').onkeydown = function(e) {
 window.onload = function() {
 	document.getElementById('newBtn').style.display = 'none';
 	document.getElementById('downloadBtn').style.display = 'none';
+	console.log('tng-sdk-descriptorgen started; logging works');
 };
 
 // reload window to allow creating new descriptors
@@ -89,6 +90,7 @@ function refresh() {
 function loadDescriptors() {
 	if (productionMode) {
         // load most recent 5GTANGO default descriptors from the tng-schema repository using RawGit production CDN
+        console.log("productionMode on: Load default descriptors from GitHub via rawgit CDN");
         var tangoVnfdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-schema/4ea30d03/function-descriptor/examples/default-vnfd.yml";
         var tangoNsdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-schema/4ea30d03/service-descriptor/examples/default-nsd.yml";
 
@@ -97,12 +99,12 @@ function loadDescriptors() {
     }
     else {
         // or load them from StefanUPB/tng-sdk-descriptorgen fork using RawGit development CDN (only for development, testing)
-        console.log("productionMode off: Load default descr. from StefanUPB/tng-sdk-descriptorgen + no caching");
-        var tangoVnfdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/dev/default-descriptors/tango_default_vnfd.yml";
-        var tangoNsdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/dev/default-descriptors/tango_default_nsd.yml";
+          console.log("productionMode off: Load default descriptors from localhost");
+          var tangoVnfdUrl = "http://localhost/default-descriptors/tango_default_vnfd.yml";
+          var tangoNsdUrl = "http://localhost/default-descriptors/tango_default_nsd.yml";
 
-        var osmVnfdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/dev/default-descriptors/osm_default_vnfd.yaml";
-        var osmNsdUrl = "https://rawgit.com/StefanUPB/tng-sdk-descriptorgen/dev/default-descriptors/osm_default_nsd.yaml";
+          var osmVnfdUrl = "http://localhost/default-descriptors/osm_default_vnfd.yaml";
+          var osmNsdUrl = "http://localhost/default-descriptors/osm_default_nsd.yaml";
     }
 	
 	// hide the generate button and input and show the generate new and download buttons
