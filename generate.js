@@ -89,16 +89,16 @@ function refresh() {
 // load default VNFD and NSD from GitHub (asynchronous -> set VNFD, NSD and ask for user input when ready)
 function loadDescriptors() {
 	if (productionMode) {
-        // load most recent 5GTANGO default descriptors from the tng-schema repository using RawGit production CDN
-        console.log("productionMode on: Load default descriptors from GitHub via rawgit CDN");
-        var tangoVnfdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-schema/4ea30d03/function-descriptor/examples/default-vnfd.yml";
-        var tangoNsdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-schema/4ea30d03/service-descriptor/examples/default-nsd.yml";
+        // load most recent 5GTANGO default descriptors from the tng-schema repository using jsDelivr production CDN
+        console.log("productionMode on: Load default descriptors from GitHub via jsDelivr CDN");
+        var tangoVnfdUrl = "https://cdn.jsdelivr.net/gh/sonata-nfv/tng-schema@4ea30d0338ace7f613ae4218608ac19f1f995231/function-descriptor/examples/default-vnfd.yml";
+        var tangoNsdUrl = "https://cdn.jsdelivr.net/gh/sonata-nfv/tng-schema@4ea30d0338ace7f613ae4218608ac19f1f995231/service-descriptor/examples/default-nsd.yml";
 
-        var osmVnfdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-sdk-descriptorgen/134e6193/default-descriptors/osm_default_vnfd.yaml";
-        var osmNsdUrl = "https://cdn.rawgit.com/sonata-nfv/tng-sdk-descriptorgen/134e6193/default-descriptors/osm_default_nsd.yaml";
+        var osmVnfdUrl = "https://cdn.jsdelivr.net/gh/sonata-nfv/tng-sdk-descriptorgen@134e6193275884c5789b3ef236869ec8fc009213/default-descriptors/osm_default_vnfd.yaml";
+        var osmNsdUrl = "https://cdn.jsdelivr.net/gh/sonata-nfv/tng-sdk-descriptorgen@134e6193275884c5789b3ef236869ec8fc009213/default-descriptors/osm_default_nsd.yaml";
     }
     else {
-        // or load them from StefanUPB/tng-sdk-descriptorgen fork using RawGit development CDN (only for development, testing)
+        // or load them from StefanUPB/tng-sdk-descriptorgen fork using jsDelivr development CDN (only for development, testing)
           console.log("productionMode off: Load default descriptors from localhost");
           var tangoVnfdUrl = "http://localhost/default-descriptors/tango_default_vnfd.yml";
           var tangoNsdUrl = "http://localhost/default-descriptors/tango_default_nsd.yml";
