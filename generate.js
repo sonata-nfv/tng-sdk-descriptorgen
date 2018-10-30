@@ -31,6 +31,7 @@ var tangoNsd;
 var osmVnfds;
 var osmNsd;
 var uploadedVnfs = {};
+var productionMode = true;      // productionMode = true = caching of default descriptors enabled
 
 // button click
 $('#submitBtn').click(loadDescriptors);
