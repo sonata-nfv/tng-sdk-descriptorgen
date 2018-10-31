@@ -89,12 +89,15 @@ function refresh() {
 // load default VNFD and NSD from GitHub (asynchronous -> set VNFD, NSD and ask for user input when ready)
 function loadDescriptors() {
     // load most recent 5GTANGO default descriptors from the tng-schema repository using jsDelivr production CDN (may need some time until the cached descriptors are updated)
-    console.log("productionMode on: Load default descriptors from GitHub via jsDelivr CDN");
-    var tangoVnfdUrl = "https://cdn.jsdelivr.net/gh/sonata-nfv/tng-schema@4ea30d0338ace7f613ae4218608ac19f1f995231/function-descriptor/examples/default-vnfd.yml";
-    var tangoNsdUrl = "https://cdn.jsdelivr.net/gh/sonata-nfv/tng-schema@4ea30d0338ace7f613ae4218608ac19f1f995231/service-descriptor/examples/default-nsd.yml";
+	// TODO: update git commit hash when changing a default descriptor
+	schemaGitCommit = "4eac7c6e21cc5a235c5125a2f7974f0153664bcc"
+	dgnGitCommit = "562f512206a007f5489551d9f7c2d4a14275df3d"
+    console.log("Loading default descriptors from GitHub via jsDelivr CDN. 5GTANGO descriptors from tng-schema (commit " + schemaGitCommit + "), OSM descriptors from tng-sdk-descriptorgen (commit " + dgnGitCommit + ")");
+    var tangoVnfdUrl = "https://cdn.jsdelivr.net/gh/sonata-nfv/tng-schema@" + schemaGitCommit + "/function-descriptor/examples/default-vnfd.yml";
+    var tangoNsdUrl = "https://cdn.jsdelivr.net/gh/sonata-nfv/tng-schema@" + schemaGitCommit + "/service-descriptor/examples/default-nsd.yml";
 
-    var osmVnfdUrl = "https://cdn.jsdelivr.net/gh/sonata-nfv/tng-sdk-descriptorgen@134e6193275884c5789b3ef236869ec8fc009213/default-descriptors/osm_default_vnfd.yaml";
-    var osmNsdUrl = "https://cdn.jsdelivr.net/gh/sonata-nfv/tng-sdk-descriptorgen@134e6193275884c5789b3ef236869ec8fc009213/default-descriptors/osm_default_nsd.yaml";
+    var osmVnfdUrl = "https://cdn.jsdelivr.net/gh/sonata-nfv/tng-sdk-descriptorgen@" + dgnGitCommit + "/default-descriptors/osm_default_vnfd.yaml";
+    var osmNsdUrl = "https://cdn.jsdelivr.net/gh/sonata-nfv/tng-sdk-descriptorgen@" + dgnGitCommit + "/default-descriptors/osm_default_nsd.yaml";
 	
 	// hide the generate button and input and show the generate new and download buttons
 	document.getElementById('nsdInput').style.display = 'none';
