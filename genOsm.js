@@ -33,26 +33,44 @@ function genOsmDescriptors(defaultNsd, defaultVnfd, uploadedVnfs) {
 // generate VNFDs by copying and editing the default VNFD (not for uploaded VNFDs)
 function generateOsmVnfds(defaultVnfd, uploadedVnfs) {
     var vnfds = [];
-    var numDefaultVnfs = 0;
+    var numVnfs = $('.vnf-select').length;
+    var vnfIndex = 0;
     // iterate through VNFs (using .vnf-select, which points to the VNFD of each VNF)
     $('.vnf-select').each(function(i, obj) {
-        if (obj.value == "default") {
+        if (obj.value === "default") {
             vnfds.push(jQuery.extend(true, {}, defaultVnfd));   // deep copy (necessary for nested VNFD fields)
             var vnfd = vnfds[i]["vnfd-catalog"]["vnfd"][0];
-            vnfd["id"] = "default-vnf" + numDefaultVnfs;
-            vnfd["name"] = "default-vnf" + numDefaultVnfs;
-            vnfd["short-name"] = "default-vnf" + numDefaultVnfs;
+            vnfd["id"] = "vnf" + vnfIndex;
+            vnfd["name"] = "vnf" + vnfIndex;
+            vnfd["short-name"] = "vnf" + vnfIndex;
             vnfd["vendor"] = document.getElementById('vendor').value;
             vnfd["description"] = "A VNF based on " + document.getElementById('image' + (i+1)).value;
             vnfd["vdu"][0]["image"] = document.getElementById('image' + (i+1)).value;
 
-            // set unique interface names
+            // set unique interface names and external conn. point. refs
             var vdu_interface = vnfd["vdu"][0]["interface"];
-            vdu_interface[0]["name"] = "vnf" + numDefaultVnfs + "-mgmt";
-            vdu_interface[1]["name"] = "vnf" + numDefaultVnfs + "-input";
-            vdu_interface[2]["name"] = "vnf" + numDefaultVnfs + "-output";
+            vdu_interface[0]["name"] = "vnf" + vnfIndex + "-mgmt";
+            vdu_interface[1]["name"] = "vnf" + vnfIndex + "-input";
+            vdu_interface[2]["name"] = "vnf" + vnfIndex + "-output";
+            // vdu_interface[0]["external-connection-point-ref"] = "vnf" + vnfIndex + "/mgmt";
+            // vdu_interface[1]["external-connection-point-ref"] = "vnf" + vnfIndex + "/input";
+            // vdu_interface[2]["external-connection-point-ref"] = "vnf" + vnfIndex + "/output";
 
-            numDefaultVnfs += 1;
+            // IMPORTANT: for first VNF, remove input interface and cp; for last, remove output
+            // index: 0 = mgmt, 1 = input, 2 = output
+            // first remove output to avoid shifting array indices
+            if (vnfIndex === numVnfs - 1) {
+                vdu_interface.splice(2, 1);         // delete 1 element from index 2
+                delete vnfd["connection-point"].splice(2, 1);
+                console.log("VNF " + vnfIndex + ": Deleted output")
+            }
+            if (vnfIndex === 0) {
+                vdu_interface.splice(1, 1);
+                delete vnfd["connection-point"].splice(1, 1);
+                console.log("VNF " + vnfIndex + ": Deleted input")
+            }
+
+            vnfIndex += 1;
         }
         else {
             console.log("VNF " + i + ": Using uploaded VNFD: " + obj.value);

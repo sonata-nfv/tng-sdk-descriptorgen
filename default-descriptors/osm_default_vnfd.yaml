@@ -17,6 +17,7 @@ vnfd-catalog:
             vcpu-count: 1
             memory-mb: 512
             storage-gb: 10
+          # important: first VNF must not have input interface; last VNF not output interface
           interface:
             - name: vdu-mgmt
               type: EXTERNAL
@@ -33,7 +34,8 @@ vnfd-catalog:
               virtual-interface:
                 type: VIRTIO
               external-connection-point-ref: output
-          
+
+      # important: first VNF must not have input cp; last VNF not output cp
       connection-point:
         - name: mgmt
           type: VPORT
