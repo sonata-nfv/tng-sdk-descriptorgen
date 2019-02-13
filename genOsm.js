@@ -52,9 +52,6 @@ function generateOsmVnfds(defaultVnfd, uploadedVnfs) {
             vdu_interface[0]["name"] = "vnf" + vnfIndex + "-mgmt";
             vdu_interface[1]["name"] = "vnf" + vnfIndex + "-input";
             vdu_interface[2]["name"] = "vnf" + vnfIndex + "-output";
-            // vdu_interface[0]["external-connection-point-ref"] = "vnf" + vnfIndex + "/mgmt";
-            // vdu_interface[1]["external-connection-point-ref"] = "vnf" + vnfIndex + "/input";
-            // vdu_interface[2]["external-connection-point-ref"] = "vnf" + vnfIndex + "/output";
 
             // IMPORTANT: for first VNF, remove input interface and cp; for last, remove output
             // index: 0 = mgmt, 1 = input, 2 = output
@@ -62,12 +59,10 @@ function generateOsmVnfds(defaultVnfd, uploadedVnfs) {
             if (vnfIndex === numVnfs - 1) {
                 vdu_interface.splice(2, 1);         // delete 1 element from index 2
                 delete vnfd["connection-point"].splice(2, 1);
-                console.log("VNF " + vnfIndex + ": Deleted output")
             }
             if (vnfIndex === 0) {
                 vdu_interface.splice(1, 1);
                 delete vnfd["connection-point"].splice(1, 1);
-                console.log("VNF " + vnfIndex + ": Deleted input")
             }
 
             vnfIndex += 1;
@@ -112,6 +107,8 @@ function generateOsmNsd(defaultNsd, vnfds) {
         nsd["vld"][i+1] = {};
         nsd["vld"][i+1]["id"] = "vnf" + i + "-2-vnf" + (i+1);
         nsd["vld"][i+1]["name"] = "vnf" + i + "-2-vnf" + (i+1);
+        nsd["vld"][i+1]["vim-network-name"] = "default";
+        nsd["vld"][i+1]["type"] = "ELAN";
         nsd["vld"][i+1]["vnfd-connection-point-ref"] = [];
         nsd["vld"][i+1]["vnfd-connection-point-ref"][0] = {
             "member-vnf-index-ref": i,
