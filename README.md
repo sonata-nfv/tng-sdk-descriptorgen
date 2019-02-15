@@ -79,7 +79,7 @@ Contribution is very welcome! Please, fork the repository and create pull reques
 
 **Lead developers:**
 
-* Stefan Schneider (@StefanUPB)
+* Stefan Schneider (@stefanbschneider)
 * Manuel Peuster (@mpeuster)
 
 ## License

@@ -1,11 +1,12 @@
 FROM ubuntu:18.04
 
 # install required packages
-RUN apt-get clean
+#sudo rm -rf /var/lib/apt/lists/*
+#RUN apt-get clean
 RUN apt-get update -y && apt-get upgrade --fix-missing -y
 RUN apt-get install -y wget curl gnupg nodejs default-jre firefox
     
-# install chrome (now using firefox instead)
+# install chrome
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
 RUN echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' | tee /etc/apt/sources.list.d/google-chrome.list
 RUN apt-get update -y && apt-get install -y google-chrome-stable

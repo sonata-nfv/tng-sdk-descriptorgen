@@ -3,9 +3,9 @@
 
 nsd-catalog:
   nsd:
-  - id: default-nsd
-    name: default-nsd
-    description: "A default NSD with one default VNFDs"
+  - id: nsd
+    name: nsd
+    description: "An example NSD"
     vendor: etsi.osm
     version: 1.0
     
@@ -17,6 +17,8 @@ nsd-catalog:
     - id: mgmt
       name: mgmt
       mgmt-network: true
+      vim-network-name: default
+      type: ELAN
       vnfd-connection-point-ref:
       - member-vnf-index-ref: 1
         vnfd-connection-point-ref: mgmt
