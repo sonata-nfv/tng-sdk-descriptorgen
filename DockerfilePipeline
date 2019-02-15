@@ -1,7 +1,8 @@
 FROM ubuntu:18.04
 
 # install required packages
-RUN apt-get clean
+#sudo rm -rf /var/lib/apt/lists/*
+#RUN apt-get clean
 RUN apt-get update -y && apt-get upgrade --fix-missing -y
 RUN apt-get install -y wget curl gnupg nodejs default-jre firefox
     
