@@ -4,7 +4,9 @@
 **Note:** The 5GTANGO descriptor generator is now integrated in the [`tng-sdk-project`](https://github.com/sonata-nfv/tng-sdk-project) tool that provides the same functionality but also offers usage via a CLI and as a micro service with a REST API. Thus, the development in this repository is discontinued.
 
 <p align="center"><img src="https://github.com/sonata-nfv/tng-api-gtw/wiki/images/sonata-5gtango-logo-500px.png" /></p>
+
 # 5GTANGO Descriptor Generator
+
 The descriptor generator provides a simple web-based GUI that allows to setup and generate correct descriptors (VNFDs and NSDs). The generator uses provided high-level information and combines it with sensible default values to generate descriptors with a single click. 
 
 It generates descriptors both for 5GTANGO and for OSM. The resulting VNFDs and NSDs are displayed in the GUI and can still be adjusted as needed - directly in the GUI. The final descriptors can then be downloaded as complete 5GTANGO project (incl. a project manifest), which is ready for packaging and further use.
